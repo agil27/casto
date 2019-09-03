@@ -14,6 +14,7 @@
   - 如果是网络图片，{ 'url': xxx }
   - 未登录：error: please login
   - 请求格式错误：400
+  - 下载失败：error: fail to download
   - 错误图片格式：error: wrong jpeg format
   - 操作成功：200， { 'id': 操作id}
 - /operation/{0, 1}/net/ 处理图片，POST, cookie

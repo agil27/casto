@@ -7,6 +7,8 @@ import datetime
 import time
 import os
 import sys
+import urllib.request
+import urllib.error
 
 sys.path.append('../')
 from user.models import User
@@ -23,24 +25,36 @@ if not os.path.exists(UPLOAD_PATH):
 @login_required
 def upload(request):
     file_local = request.FILES.get('image', None)
-    file_web = request.POST.get('url', None)
+    file_web = request.POST.get('url', None).strip()
     if file_local is None and file_web is None:
         return HttpResponse(status=400)
     image_name = str(uuid.uuid1())
     path = os.path.join(UPLOAD_PATH, image_name)
     if file_local is not None:
         raw_name = file_local.name
-        _, suffix = os.path.split(raw_name)
-        if not suffix in ['jpg', 'JPEG', 'jpeg']:
+        _, suffix = os.path.splitext(raw_name)
+        if not suffix in ['.jpg', '.JPEG', '.jpeg']:
             return JsonResponse({'error': 'wrong jpeg format'})
-        path += '.' + suffix
+        path += suffix
         with open(path, 'wb') as file:
             for chuck in file_local.chunks():
                 file.write(chuck)
     else:
-        # TODO
-        raw_name = 'image.jpg'
-        pass
+        header = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.75 Safari/537.36'
+        }
+        req = urllib.request.Request(file_web, headers=header)
+        try:
+            with urllib.request.urlopen(req) as f:
+                if f.getheader('Content-Type') != 'image/jpg':
+                    return JsonResponse({'error': 'wrong jpeg format'})
+                response_data = f.read()
+        except urllib.error.HTTPError:
+            return JsonResponse({'error': 'fail to download'})
+        raw_name = file_web.split('/')[-1][-128:]
+        path += '.jpg'
+        with open(path, 'wb') as file:
+            file.write(response_data)
     operation = Operation.objects.create(
         raw_image=path,
         raw_image_name=raw_name,
@@ -106,7 +120,10 @@ def query(request):
 @login_required
 def get(request, operation_id):
     user_id = request.user.id
-    operation = Operation.objects.get(id=operation_id)
+    try:
+        operation = Operation.objects.get(id=operation_id)
+    except KeyError:
+        return JsonResponse({'error': 'not exists'})
     if operation.user_id != user_id:
         return JsonResponse({'error': 'not exists'})
     return JsonResponse(get_operation_info(operation))
@@ -162,5 +179,9 @@ def get_operation_info(operation):
 
 def get_operation_info_admin(operation):
     info = get_operation_info(operation)
-    info['username'] = User.objects.get(id=operation.user_id).username
+    try:
+        username = User.objects.get(id=operation.user_id).username
+    except KeyError:
+        username = 'unknown'
+    info['username'] = username
     return info
