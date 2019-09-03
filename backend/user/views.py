@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate
@@ -39,6 +38,10 @@ def login(request):
 def logout(request):
     django_logout(request)
     return HttpResponse(status=200)
+
+
+def please_login(_):
+    return JsonResponse({'error': 'please login'})
 
 
 def valid_password(password):

@@ -16,10 +16,19 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 import user.views
+import operation.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('logon/', user.views.logon),
     path('login/', user.views.login),
     path('logout/', user.views.logout),
+    path('operation/upload/', operation.views.upload),
+    path('operation/<int:net_id>/net/', operation.views.net),
+    path('operation/delete/', operation.views.delete),
+    path('operation/query/', operation.views.query),
+    path('operation/<int:operation_id>/get/', operation.views.get),
+
+    # require_login 失败会重定向至该页面
+    path('account/login/', user.views.please_login),
 ]
