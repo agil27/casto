@@ -1,0 +1,41 @@
+# 接口
+
+- /logon/ 注册，POST，username+password
+  - 参数不合要求：error: invalid parameter
+  - 操作成功返回200
+- /login/ 登录，POST，username+password，cookie
+  - 参数为空：error: invalid parameter
+  - 校验失败：error: fail to login
+  - 登录成功200， set-cookie
+- /logout/ 登出，POST，cookie
+  - 返回200
+- /operation/upload/ 上传图片，POST，cookie
+  - 如果是本地图片，multipart/form-data
+  - 如果是网络图片，{ 'url': xxx }
+  - 未登录：error: please login
+  - 请求格式错误：400
+  - 错误图片格式：error: wrong jpeg format
+  - 操作成功：200， { 'id': 操作id}
+- /operation/net0/ 或 /operation/net1/ 处理图片，POST, cookie, { 'id': upload的操作id }
+  - 未登录：error: please login
+  - 不属于该用户或不存在：error: not exists
+  - 200, { 'data': 处理后data }
+- /operation/delete/ 删除操作，POST，cookie，{ 'ids': [要删除的操作记录id] }
+  - 未登录：error: please login
+  - 返回200 { [ { 'id': 图片id, 'state': 是否成功 }, ... ] }
+- /operation/query/ 查看历史操作记录，POST，cookie
+  - { 'start': timestamp, 'end': timestamp }, 2个可选参数，按时间段查询
+  - 未登录：error: please login
+  - 200， { [ { 'id': 操作id, 'time': 操作时间, 'raw': 原始图片, 'processed': [ data1, data2 ] }, ...... ] }
+- /operation/{operation_id}/get/ 显示某一具体操作，POST, cookie
+  - 未登录：error: please login
+  - 不属于该用户或不存在：error: not exists
+  - 200, { 'time': 操作时间, 'raw': 原始图片, 'processed': [ data1, data2 ] }
+- /admin/login/ 管理员登录，同/login/
+- /admin/logout/ 管理员退出，同/logout/
+- /admin/query/ 管理员查看操作记录，POST，cookie
+  - 未登录：error: please login
+  - { 'username': [  ] }，可选，若为空返回所有用户记录，否则返回列表中用户记录
+  - { 'start': timestamp, 'end': timestamp }, 2个可选参数，按时间段查询
+  - 200， { 'list': [ { 'op_id': 操作id, 'username': xxx, 'time': xxx,  'raw': 原始图片, 'processed': [ data1, data2 ] }, ...... ] }
+- /admin/delete/ 管理员删除，同/operation/delete/
