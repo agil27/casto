@@ -6,6 +6,10 @@ import pytz
 import datetime
 import time
 import os
+import sys
+
+sys.path.append('../')
+from user.models import User
 
 # Create your views here.
 
@@ -71,7 +75,10 @@ def delete(request):
     user_id = request.user.id
 
     def delete_operation(operation_id):
-        operation = Operation.objects.get(id=operation_id)
+        try:
+            operation = Operation.objects.get(id=operation_id)
+        except KeyError:
+            return False
         if operation.user_id != user_id:
             return False
         else:
@@ -90,8 +97,8 @@ def query(request):
     start_time = datetime.datetime.fromtimestamp(start, tz=pytz.timezone('UTC'))
     end_time = datetime.datetime.fromtimestamp(end, tz=pytz.timezone('UTC'))
     user_id = request.user.id
-    query_set = Operation.objects.filter(user_id=user_id)\
-        .filter(upload_time__gt=start_time)\
+    query_set = Operation.objects.filter(user_id=user_id) \
+        .filter(upload_time__gt=start_time) \
         .filter(upload_time__lt=end_time)
     return JsonResponse({'list': [get_operation_info(op) for op in query_set]})
 
@@ -105,6 +112,45 @@ def get(request, operation_id):
     return JsonResponse(get_operation_info(operation))
 
 
+@login_required
+def query_admin(request):
+    user = request.user
+    if not user.admin:
+        return JsonResponse({'error': 'permission denied'})
+    start = request.POST.get('start', 0)
+    end = request.POST.get('end', 9999999999)
+    start_time = datetime.datetime.fromtimestamp(start, tz=pytz.timezone('UTC'))
+    end_time = datetime.datetime.fromtimestamp(end, tz=pytz.timezone('UTC'))
+    username = request.POST.get('username', [])
+    if not username:
+        user_ids = [u.id for u in User.objects.all()]
+    else:
+        user_ids = [User.objects.get(username=name).id for name in username]
+    query_set = Operation.objects.filter(user_id__in=user_ids) \
+        .filter(upload_time__gt=start_time) \
+        .filter(upload_time__lt=end_time)
+    return JsonResponse({'list': [get_operation_info_admin(op) for op in query_set]})
+
+
+@login_required
+def delete_admin(request):
+    user = request.user
+    if not user.admin:
+        return JsonResponse({'error': 'permission denied'})
+
+    def delete_operation(operation_id):
+        try:
+            operation = Operation.objects.get(id=operation_id)
+        except KeyError:
+            return False
+        operation.delete()
+        return True
+
+    ids = request.POST.get('ids', [])
+    res = [{'id': id_, 'state': delete_operation(id_)} for id_ in ids]
+    return JsonResponse({'list': res})
+
+
 def get_operation_info(operation):
     return {
         'id': operation.id,
@@ -112,3 +158,9 @@ def get_operation_info(operation):
         'raw': operation.raw_image,
         'name': operation.raw_image_name
     }
+
+
+def get_operation_info_admin(operation):
+    info = get_operation_info(operation)
+    info['username'] = User.objects.get(id=operation.user_id).username
+    return info

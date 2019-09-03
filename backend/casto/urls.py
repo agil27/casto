@@ -28,6 +28,10 @@ urlpatterns = [
     path('operation/delete/', operation.views.delete),
     path('operation/query/', operation.views.query),
     path('operation/<int:operation_id>/get/', operation.views.get),
+    path('admin/login/', user.views.login),
+    path('admin/logout/', user.views.logout),
+    path('admin/query/', operation.views.query_admin),
+    path('admin/delete/', operation.views.delete_admin),
 
     # require_login 失败会重定向至该页面
     path('account/login/', user.views.please_login),

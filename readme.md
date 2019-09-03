@@ -31,11 +31,13 @@
   - 未登录：error: please login
   - 不属于该用户或不存在：error: not exists
   - 200, { 'id': 操作id, 'time': 时间戳, 'raw': 原始图片, 'name': 原始图片文件名 }
-- /admin/login/ 管理员登录，同/login/
-- /admin/logout/ 管理员退出，同/logout/
+- ~~/admin/login/ 管理员登录，同/login/~~ 我突然意识到没必要做一个管理员登录登出啊，只要在下面这两个接口里判断是不是管理员就行了...
+- ~~/admin/logout/ 管理员退出，同/logout/~~
 - /admin/query/ 管理员查看操作记录，POST，cookie
   - 未登录：error: please login
+  - 不是管理员：error: permission denied
   - { 'username': [  ] }，可选，若为空返回所有用户记录，否则返回列表中用户记录
   - { 'start': timestamp, 'end': timestamp }, 2个可选参数，按时间段查询
-  - 200， { 'list': [ { 'op_id': 操作id, 'username': xxx, 'time': xxx,  'raw': 原始图片, 'name': 原始图片文件名 }, ...... ] }
+  - 200， { 'list': [ { 'id': 操作id, 'username': xxx, 'time': xxx,  'raw': 原始图片, 'name': 原始图片文件名 }, ...... ] }
 - /admin/delete/ 管理员删除，同/operation/delete/
+  - 不是管理员：error: permission denied
