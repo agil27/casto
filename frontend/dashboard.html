@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Casto Landing Page</title>
+        <meta name="description" content="Casto is a online image casting app" />
+        <link href="./style/bootstrap.min.css" rel="stylesheet">
+        <link href="./style/ionicons.css" rel="stylesheet">
+        <link href="./style/theme.css" rel="stylesheet">
+        <link href="./style/template.css" rel="stylesheet">
+    </head>
+    
+    <body>   
+        <section id="container" class="container pb-5">
+            <div class="d-flex my-4">
+                <div class="row jumbotron w-100 py-5 mx-auto">
+                    <div class = "col-lg-8">
+                            <h1>上传图片</h1>
+                            <p class = "lead"></p>
+                            <p class="lead">
+                                上传图片进行头像截取 + 年龄、性别、表情标注，可选择性别转换滤镜。
+                            </p>
+                            <form class="col-lg-8 form" role="form" autocomplete="off" id="formLogin" novalidate="" method="POST">  
+                                <label class="col-form-label form-control-label text-muted">未选择任何文件</label>   
+                                <div class = "form-group row">                        
+                                    <div class="input-group lg-6 mb-3">
+                                        <input type="text" class="form-control form-control-lg" placeholder="" disabled = "true" id = "file_addr">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary btn-lg rounded-right" id = "explore_btn" type="button">浏览</button>
+                                            <input type = "file" style = "display:none" id = "file_input"></input>
+                                        </div>
+                                    </div> 
+                                </div>             
+                            </form>
+                            <div class="col-md-8">
+                                    <div class="progress border-primary mb-2">
+                                        <div class="progress-bar-striped bg-primary w-75" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"> </div>
+                                    </div>
+                                    <label class="col-form-label form-control-label text-muted" style = "font-family: Source Hei Light">当前进度：25%</label>
+                            </div>
+                    </div> 
+                    <div class = "col-lg-3">
+                            <h3>图像预览</h3>
+                            <p class = "lead"></p>
+                            <div class = "text-center card border-primary">
+                                <img src = "img/Avatar.png" class = "m-0 center-block img-rounded img-responsive" style = "width: 100%; height: 100%"/>
+                            </div>
+                    </div>                  
+                </div>
+                
+            </div>
+            <div class="row my-2 d-flex centerblock" >
+                    <div class="row col-12 col-lg-offset-2 center-block">
+                            <div class="col-lg-4 mb-4">
+                                    <div class="card bg-primary text-white h-100">
+                                        <div class="card-body d-flex flex-column align-items-start">
+                                            <h4 class="card-title">人脸识别</h4>
+                                            <p class="card-text">运用DLIB技术准确识别人脸并进行裁剪，运用VGGNet，Compact CNN神经网络进行年龄，性别和表情识别。</p>
+                                            <button type = "button" class="btn btn-primary border-white mt-auto" id = "detect_btn">选择此服务</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            <div class="col-lg-4 mb-4">
+                                <div class="card bg-primary text-white h-100">
+                                    <div class="card-body d-flex flex-column align-items-start">
+                                        <h4 class="card-title">性别转换滤镜</h4>
+                                        <p class="card-text">利用在著名的CelebA数据集上训练的CycleGAN网络结构实现性别的风格迁移，使用时请上传正脸头像。</p>
+                                        <button type = "button" class="btn btn-primary border-white mt-auto" id = "gender_btn">选择此服务</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            <div class="row d-flex m-0">
+                <div class="col-lg-2 mb-auto">
+                    <div class="list-group">
+                        <a href="#" class="list-group-item list-group-item-action active">全部记录</a>
+                        <a href="#" class="list-group-item list-group-item-action">已完成</a>
+                        <a href="#" class="list-group-item list-group-item-action">进行中</a>
+                    </div>
+                </div>
+                <div class="col-lg-10 mb-auto">
+                        <div class="mb-4">
+                            <div class="card border-primary h-100">
+                                <div class="row card-body d-flex">
+                                    <div class = "col-lg-9 flex-column align-items-start">
+                                        <h4 class="card-title">操作记录#1</h4>
+                                        <p class="card-text">操作类型：人脸识别</p>
+                                    </div>
+                                    <div class = "col-lg-3">
+                                        <div class = "row">
+                                            <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="customCheck" checked>
+                                                    <label class="custom-control-label" for="customCheck"></label>
+                                                <button type = "button" class="btn btn-dark border-white mt-auto" id = "see-result">查看结果</button>
+                                                <button type = "button" class="btn btn-danger border-white mt-auto" id = "see-result">删除记录</button>
+                                            </div>                                                                                
+                                        </div>   
+                                    </div>                       
+                                </div>
+                            </div>
+                        </div>
+                        <div class = "float-right">
+                            <button type = "button" class="btn btn-success border-white mt-auto text-white" id = "see-result">全部删除</button>
+                        </div>
+                </div>
+            </div>
+        </section>
+        <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary" id="navbar1">
+                <div class="container">
+                    <a class="navbar-brand mr-1 mb-1 mt-0" href="index.html">Casto</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsingNavbar">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse justify-content-center" id="collapsingNavbar">
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="login.html">登陆</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="signup.html">注册</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDd" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  用户
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDd">
+                                    <a class="dropdown-item px-2" href="dashboard.html">管理面板</a>
+                                    <button class="dropdown-item px-2 btn btn-link" type="button">登出</button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <footer id="footer" class="bg-dark text-light py-5">
+                    <div class="container py-5">
+                        <div class="row">
+                            <div class="col-6 col-md-6 col-lg-3 mb-2">
+                                <h6 class="text-uppercase">作者</h6>
+                                <ul class="nav flex-column">
+                                    <li><a class="text-white" target="ext" rel="nofollow" href="https://agil27.github.io" title="汪元标">汪元标</a></li>
+                                    <li><a class="text-white" target="ext" rel="nofollow" href="https://zhangxwww.github.io" title="张欣炜">张欣炜</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-6 col-md-6 col-lg-3 mb-2">
+                                <h6 class="text-uppercase">开发工具</h6>
+                                <ul class="nav flex-column">
+                                    <li><a class="text-white" target="_new" href="https://getbootstrap.com">Bootstrap4</a></li>
+                                    <li><a class="text-white" target="_new" href="https://www.djangoproject.com/">Django2.0</a></li>
+                                    <li><a class="text-white" target="_new" href="https://www.sqlite.org/index.html">Sqlite3</a></li>
+                                    <li><a class="text-white" target="_new" href="https://pytorch.org/">PyTorch</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-12 col-md-12 col-lg-6 mb-2 text-right">
+                                <h6 class="text-uppercase">信息</h6>
+                                <ul class="nav flex-column">
+                                    <li>清华大学软件学院</li>
+                                    <li>2019年8月</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!--/row-->
+                    </div>
+                </footer>
+    <script src="scripts/jquery.min.js"></script>
+    <script src="scripts/popper.min.js"></script>
+    <script src="scripts/bootstrap.min.js"></script>
+    <script src="scripts/scripts.js"></script>
+    <script src="scripts/dashboard.js"></script>
+    </body>
+</html>
