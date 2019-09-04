@@ -19,10 +19,12 @@ import user.views
 import operation.views
 
 urlpatterns = [
+    path('index/', user.views.index),
     path('admin/', admin.site.urls),
-    path('logon/', user.views.logon),
+    path('signup/', user.views.signup),
     path('login/', user.views.login),
     path('logout/', user.views.logout),
+    path('dashboard/', user.views.dashboard),
     path('operation/upload/', operation.views.upload),
     path('operation/<int:net_id>/net/', operation.views.net),
     path('operation/delete/', operation.views.delete),

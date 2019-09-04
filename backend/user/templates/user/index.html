@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -5,61 +6,57 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Casto Landing Page</title>
         <meta name="description" content="Casto is a online image casting app" />
-        <link href="./style/bootstrap.min.css" rel="stylesheet">
-        <link href="./style/ionicons.css" rel="stylesheet">
-        <link href="./style/theme.css" rel="stylesheet">
-        <link href="./style/template.css" rel="stylesheet">
-        <script src = "scripts/signup.js"></script>
+        <link href="{% static "user/style/bootstrap.min.css" %}" rel="stylesheet">
+        <link href="{% static "user/style/ionicons.css" %}" rel="stylesheet">
+        <link href="{% static "user/style/theme.css" %}" rel="stylesheet">
+        <link href="{% static "user/style/template.css" %}" rel="stylesheet">
     </head>
     
     <body>
         <header class="bg-primary">
-            <section id="cards" class="container pb-5">
-                <div class = "row">
-                <div class="col-12 d-flex my-3">
-                    <div class="col-6 col-md-offset-3 jumbotron w-100 py-5 mx-auto">
-                        <h1 class="display-5 jumbotron-header">注册</h1>
-                        <form class="form" role="form" autocomplete="off" id="formLogin" novalidate="" method="POST">                              
-                                <div class="form-group was-validated">
-                                    <label class="col-form-label form-control-label text-muted">用户名</label>
-                                    <input class="form-control form-control-lg" type="text" required="" id="username" name="un">
-                                    <div class="invalid-feedback">
-                                        请输入用户名！
+            <div class="container h-100">
+                <div class="row h-100">
+                    <div class="col-12">
+                        <div class="text-center m-0 vh-100 d-flex flex-column justify-content-center text-light">
+                            <h1 class="text-center display-4">Casto</h1>
+                            <p class="text-center display-5">轻量级在线图片AI转换</p>
+                            <div class=>
+                                <div class="col-lg-4 col-sm-6 mx-auto">
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control form-control-lg" placeholder="用户名">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-light btn-lg rounded-right" type="button">注册</button>
+                                        </div>
                                     </div>
+                                    <p class ="text-right display-6">已有账户？点击<a class = "display-6" href = "login.html">这里</a>登陆</p>
                                 </div>
-                                <div class="form-group was-validated">
-                                    <label class="col-form-label form-control-label text-muted">密码</label>
-                                    <input type="password" class="form-control form-control-lg" id="password" required="">
-                                    <div class="invalid-feedback">请输入密码！</div>
-                                </div>
-                                <button type="submit" class="btn btn-lg btn-dark float-right" id="btnSignup">点击注册</button>
-                        </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                </div>
-            </section>
-        </header> 
+            </div>
+        </header>    
         
         <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary" id="navbar1">
                 <div class="container">
-                    <a class="navbar-brand mr-1 mb-1 mt-0" href="index.html">Casto</a>
+                    <a class="navbar-brand mr-1 mb-1 mt-0" href="../index/">Casto</a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsingNavbar">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="navbar-collapse collapse justify-content-center" id="collapsingNavbar">
                         <ul class="navbar-nav ml-auto">
                             <li class="nav-item">
-                                <a class="nav-link" href="login.html">登陆</a>
+                                <a class="nav-link" href="../login/">登陆</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="signup.html">注册</a>
+                                <a class="nav-link" href="../signup/">注册</a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDd" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                   用户
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDd">
-                                    <a class="dropdown-item px-2" href="dashboard.html">管理面板</a>
+                                    <a class="dropdown-item px-2" href="../dashboard/">管理面板</a>
                                     <button class="dropdown-item px-2 btn btn-link" type="button">登出</button>
                                 </div>
                             </li>
@@ -97,9 +94,9 @@
                         <!--/row-->
                     </div>
                 </footer>
-    <script src="scripts/jquery.min.js"></script>
-    <script src="scripts/popper.min.js"></script>
-    <script src="scripts/bootstrap.min.js"></script>
-    <script src="scripts/scripts.js"></script>
+        <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+        <script src="https://cdn.staticfile.org/popper.js/1.13.0/umd/popper.min.js"></script>
+        <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <script src="{% static "user/scripts/scripts.js" %}"></script>
     </body>
 </html>

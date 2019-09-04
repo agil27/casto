@@ -10,7 +10,7 @@ function onSignupClicked() {
             username: name,
             password: pwd
         }
-        $.post("dashboard.html", data, function(res) {
+        $.post("../dashboard/", data, function(res) {
             console.log(res)
         })
     }

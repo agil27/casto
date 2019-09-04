@@ -10,32 +10,40 @@ import re
 
 
 # Create your views here.
-def logon(request):
-    if request.method != 'POST':
-        return HttpResponse(status=400)
-    username = request.POST.get('username', '').strip()
-    password = request.POST.get('password', '').strip()
-    if username == '' or password == '' or not valid_password(password):
-        return JsonResponse({'error': 'invalid parameter'})
-    user = User.objects.create(username=username, password=make_password(password))
-    user.save()
-    return redirect('login.html')
+def index(request):
+    return render(request, 'user/index.html', {})
 
+def signup(request):
+    if request.method == 'POST':
+        username = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '').strip()
+        print(username, password)
+        if username == '' or password == '' or not valid_password(password): 
+            return JsonResponse({'error': 'invalid parameter'})
+        user = User.objects.create(username=username, password=make_password(password))
+        user.save()
+        return render(request, 'user/login.html', {})
+    elif request.method == 'GET':
+        return render(request, 'user/signup.html', {})
 
 def login(request):
-    if request.method != 'POST':
-        return HttpResponse(status=400)
-    username = request.POST.get('username', '').strip()
-    password = request.POST.get('password', '').strip()
-    if username == '' or password == '':
-        return JsonResponse({'error': 'invalid parameter'})
-    user = authenticate(username=username, password=password)
-    if user is None:
-        return JsonResponse({'error': 'fail to login'})
-    django_login(request, user)
-    return HttpResponse(status=200)
+    if request.method == 'POST':
+        username = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '').strip()
+        if username == '' or password == '':
+            return JsonResponse({'error': 'invalid parameter'})
+        user = authenticate(username=username, password=password)
+        if user is None:
+            return JsonResponse({'error': 'fail to login'})
+        django_login(request, user)
+        return HttpResponse(status=200)
+    elif request.method == 'GET':
+        return render(request, 'user/login.html', {})
 
-
+def dashboard(request):
+    if request.method == 'GET':
+        return render(request, 'user/dashboard.html')
+        
 def logout(request):
     django_logout(request)
     return HttpResponse(status=200)
