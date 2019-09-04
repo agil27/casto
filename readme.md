@@ -2,7 +2,7 @@
 
 - /logon/ 注册，POST，username+password
   - 参数不合要求：error: invalid parameter
-  - 操作成功返回200
+  - 成功重定向到login.html
 - /login/ 登录，POST，username+password，cookie
   - 参数为空：error: invalid parameter
   - 校验失败：error: fail to login
@@ -12,33 +12,33 @@
 - /operation/upload/ 上传图片，POST，cookie
   - 如果是本地图片，multipart/form-data,  name='image'
   - 如果是网络图片，{ 'url': xxx }
-  - 未登录：error: please login
+  - 未登录：跳转至login.html
   - 请求格式错误：400
   - 下载失败：error: fail to download
   - 错误图片格式：error: wrong jpeg format
   - 操作成功：200， { 'id': 操作id}
 - /operation/{0, 1}/net/ 处理图片，POST, cookie
-  - 未登录：error: please login
+  - 未登录：跳转至login.html
   - 不属于该用户或不存在：error: not exists
   - 200, { 'data': 处理后data }
 - /operation/delete/ 删除操作，POST，cookie，{ 'ids': [要删除的操作记录id] }
-  - 未登录：error: please login
+  - 未登录：跳转至login.html
   - 返回200 { 'list': [ { 'id': 操作id, 'state': 是否成功 }, ... ] }
 - /operation/query/ 查看历史操作记录，POST，cookie
   - { 'start': timestamp, 'end': timestamp }, 2个可选参数，按时间段查询
-  - 未登录：error: please login
-  - 200， { 'list': [ { 'id': 操作id, 'time': 时间戳, 'raw': 原始图片, 'name': 原始图片文件名 }, ...... ] }
+  - 未登录：跳转至login.html
+  - 200， { 'list': [ { 'id': 操作id, 'time': 时间戳, 'raw': 原始图片, 'name': 原始图片文件名, 'processed': [data0, data1] }, ...... ] }
 - /operation/{operation_id}/get/ 显示某一具体操作，POST, cookie
-  - 未登录：error: please login
+  - 未登录：跳转至login.html
   - 不属于该用户或不存在：error: not exists
-  - 200, { 'id': 操作id, 'time': 时间戳, 'raw': 原始图片, 'name': 原始图片文件名 }
+  - 200, { 'id': 操作id, 'time': 时间戳, 'raw': 原始图片, 'name': 原始图片文件名, 'processed': [data0, data1] }
 - ~~/admin/login/ 管理员登录，同/login/~~ 我突然意识到没必要做一个管理员登录登出啊，只要在下面这两个接口里判断是不是管理员就行了...
 - ~~/admin/logout/ 管理员退出，同/logout/~~
 - /admin/query/ 管理员查看操作记录，POST，cookie
-  - 未登录：error: please login
+  - 未登录：跳转至login.html
   - 不是管理员：error: permission denied
   - { 'username': [  ] }，可选，若为空返回所有用户记录，否则返回列表中用户记录
   - { 'start': timestamp, 'end': timestamp }, 2个可选参数，按时间段查询
-  - 200， { 'list': [ { 'id': 操作id, 'username': xxx, 'time': xxx,  'raw': 原始图片, 'name': 原始图片文件名 }, ...... ] }
+  - 200， { 'list': [ { 'id': 操作id, 'username': xxx, 'time': xxx,  'raw': 原始图片, 'name': 原始图片文件名, 'processed': [data0, data1] }, ...... ] }
 - /admin/delete/ 管理员删除，同/operation/delete/
   - 不是管理员：error: permission denied

@@ -1,4 +1,5 @@
 from django.http import HttpResponse, JsonResponse
+from django.shortcuts import redirect, render
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as django_login
@@ -18,7 +19,7 @@ def logon(request):
         return JsonResponse({'error': 'invalid parameter'})
     user = User.objects.create(username=username, password=make_password(password))
     user.save()
-    return HttpResponse(status=200)
+    return redirect('login.html')
 
 
 def login(request):

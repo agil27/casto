@@ -76,12 +76,14 @@ def net(request, net_id):
     if net_id == 0:
         # TODO processed_path = net(raw_path)
         processed_path = operation.raw_image  # TODO delete later
+        operation.processed_image_0 = processed_path
+        operation.save()
     else:
         # TODO processed_path = net(raw_path)
         processed_path = operation.raw_image  # TODO delete later
-    with open(processed_path, 'rb') as f:
-        data = f.read()
-    return JsonResponse({'data': data})
+        operation.processed_image_1 = processed_path
+        operation.save()
+    return JsonResponse({'data': read_image_from(processed_path)})
 
 
 @login_required
@@ -169,13 +171,25 @@ def delete_admin(request):
 
 
 def get_operation_info(operation):
+
     return {
         'id': operation.id,
         'time': time.mktime(operation.upload_time.timetuple()),
-        'raw': operation.raw_image,
-        'name': operation.raw_image_name
+        'raw': read_image_from(operation.raw_image),
+        'name': operation.raw_image_name,
+        'processed': [
+            read_image_from(operation.processed_image_0),
+            read_image_from(operation.processed_image_1)
+        ]
     }
 
+def read_image_from(path):
+    try:
+        with open(path, 'rb') as f:
+            data = f.read()
+    except IOError:
+        return None
+    return data
 
 def get_operation_info_admin(operation):
     info = get_operation_info(operation)

@@ -33,6 +33,6 @@ urlpatterns = [
     path('admin/query/', operation.views.query_admin),
     path('admin/delete/', operation.views.delete_admin),
 
-    # require_login 失败会重定向至该页面
-    path('account/login/', user.views.please_login),
+    ## require_login 失败会重定向至该页面
+    # path('account/login/', user.views.please_login),
 ]
