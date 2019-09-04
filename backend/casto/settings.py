@@ -15,7 +15,7 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-LOGIN_URL = '/login.html'
+LOGIN_URL = '/login'
 
 
 # Quick-start development settings - unsuitable for production
@@ -27,7 +27,7 @@ SECRET_KEY = 'ulw&uds*t_=st-_j+0u$_k+^1*-2u-=a5lw3v&@ee^n*nd(#5z'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["166.111.80.49", "127.0.0.1"]
+ALLOWED_HOSTS = ["166.111.80.49", "127.0.0.1", "183.172.120.224", "183.172.186.76"]
 
 
 # Application definition

@@ -14,7 +14,9 @@ def index(request):
     return render(request, 'user/index.html', {})
 
 def signup(request):
+    print(request)
     if request.method == 'POST':
+        print(request.POST)
         username = request.POST.get('username', '').strip()
         password = request.POST.get('password', '').strip()
         print(username, password)
@@ -22,7 +24,8 @@ def signup(request):
             return JsonResponse({'error': 'invalid parameter'})
         user = User.objects.create(username=username, password=make_password(password))
         user.save()
-        return render(request, 'user/login.html', {})
+        return JsonResponse({'username': username, 'status': True})
+        # return render(request, 'user/login.html', {})
     elif request.method == 'GET':
         return render(request, 'user/signup.html', {})
 

@@ -1,8 +1,9 @@
 function onSignupClicked() {
     console.log("Signup Button Clicked")
-    let name = $("#username")
-    let pwd = $("#password")
-    if (length(username) == 0 || length(password) == 0) {
+    let name = $("#username").val()
+    let pwd = $("#password").val()
+    console.log(name, pwd)
+    if (name.length === 0 || pwd.length === 0) {
         return
     }
     else {
@@ -10,8 +11,11 @@ function onSignupClicked() {
             username: name,
             password: pwd
         }
-        $.post("../dashboard/", data, function(res) {
-            console.log(res)
+        console.log(data)
+        $.post("../signup/", data, function(res) {
+            if (res.status) {
+                window.location.replace("../login/");
+            }
         })
     }
 }
