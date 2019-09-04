@@ -22,17 +22,17 @@
                         <form class="form" role="form" autocomplete="off" id="formLogin" novalidate="" method="POST">                              
                                 <div class="form-group was-validated">
                                     <label class="col-form-label form-control-label text-muted">用户名</label>
-                                    <input class="form-control form-control-lg" type="text" required="" id="un" name="un">
+                                    <input class="form-control form-control-lg" type="text" required="" id="username" name="un">
                                     <div class="invalid-feedback">
                                         请输入用户名！
                                     </div>
                                 </div>
                                 <div class="form-group was-validated">
                                     <label class="col-form-label form-control-label text-muted">密码</label>
-                                    <input type="password" class="form-control form-control-lg" id="pwd" required="">
+                                    <input type="password" class="form-control form-control-lg" id="password" required="">
                                     <div class="invalid-feedback">请输入密码！</div>
                                 </div>
-                                <button type="submit" class="btn btn-lg btn-primary float-right" id="btnLogin">点击登录</button>
+                                <button type="button" class="btn btn-lg btn-primary float-right" id="btnLogin">点击登录</button>
                         </form>
                     </div>
                 </div>
@@ -42,7 +42,7 @@
         
         <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary" id="navbar1">
                 <div class="container">
-                    <a class="navbar-brand mr-1 mb-1 mt-0" href="index/">Casto</a>
+                    <a class="navbar-brand mr-1 mb-1 mt-0" href="../index/">Casto</a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsingNavbar">
                         <span class="navbar-toggler-icon"></span>
                     </button>
@@ -101,5 +101,6 @@
         <script src="https://cdn.staticfile.org/popper.js/1.13.0/umd/popper.min.js"></script>
         <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
         <script src="{% static "user/scripts/scripts.js" %}"></script>
+        <script src="{% static "user/scripts/login.js" %}"></script>
     </body>
 </html>

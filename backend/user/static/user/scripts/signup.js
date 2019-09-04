@@ -1,3 +1,10 @@
+function GetQueryString(name)
+{
+     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+     var r = window.location.search.substr(1).match(reg);
+     if(r!=null)return  unescape(r[2]); return null;
+}
+
 function onSignupClicked() {
     console.log("Signup Button Clicked")
     let name = $("#username").val()
@@ -23,4 +30,5 @@ function onSignupClicked() {
 $(document).ready(function() {
     let signup_btn = $("#btnSignup")
     signup_btn.click(onSignupClicked)
+    $("#username").val(GetQueryString("name"))
 })

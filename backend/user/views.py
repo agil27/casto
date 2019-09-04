@@ -1,6 +1,5 @@
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
-from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as django_login
 from django.contrib.auth import logout as django_logout
@@ -22,7 +21,8 @@ def signup(request):
         print(username, password)
         if username == '' or password == '' or not valid_password(password): 
             return JsonResponse({'error': 'invalid parameter'})
-        user = User.objects.create(username=username, password=make_password(password))
+        user = User.objects.create_user(username=username, password=password)
+        # user = User.objects.create(username=username, password=make_password(password))
         user.save()
         return JsonResponse({'username': username, 'status': True})
         # return render(request, 'user/login.html', {})
@@ -39,7 +39,7 @@ def login(request):
         if user is None:
             return JsonResponse({'error': 'fail to login'})
         django_login(request, user)
-        return HttpResponse(status=200)
+        return JsonResponse({'username': username, 'status': True})
     elif request.method == 'GET':
         return render(request, 'user/login.html', {})
 
