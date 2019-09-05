@@ -22,7 +22,7 @@
                             <p class="lead">
                                 上传图片进行头像截取 + 年龄、性别、表情标注，可选择性别转换滤镜。
                             </p>
-                            <form class="col-lg-8 form" role="form" autocomplete="off" id="formLogin" novalidate="" method="POST">  
+                            <form class="col-lg-8 form" role="form" autocomplete="off" id="formUpload" novalidate="">  
                                 <label class="col-form-label form-control-label text-muted">未选择任何文件</label>   
                                 <div class = "form-group row">                        
                                     <div class="input-group lg-6 mb-3">
@@ -32,8 +32,19 @@
                                             <input type = "file" style = "display:none" id = "file_input"></input>
                                         </div>
                                     </div> 
-                                </div>             
+                                </div>
                             </form>
+
+                            <form class="col-lg-8 form" role="form" autocomplete="off" id="formUpload" novalidate="">
+                                <label class="col-form-label form-control-label text-muted">上传网络文件</label> 
+                                <div class = "form-group row">   
+                                    <div class="input-group lg-6 mb-3">                     
+                                        <input type="text" class="form-control form-control-lg" placeholder="" id = "webfile_addr">
+                                        <button class="btn btn-primary btn-lg rounded-right" id = "upload_btn" type="button">上传图片</button>
+                                    </div>                    
+                                </div>         
+                            </form>
+
                             <div class="col-md-8">
                                     <div class="progress border-primary mb-2">
                                         <div class="progress-bar-striped bg-primary w-75" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"> </div>
