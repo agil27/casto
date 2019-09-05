@@ -18,6 +18,7 @@ from user.models import User
 
 
 UPLOAD_PATH = 'operation/static/operation/images'
+BRIEF_PATH = 'operation/images'
 
 if not os.path.exists(UPLOAD_PATH):
     os.makedirs(UPLOAD_PATH)
@@ -26,7 +27,9 @@ if not os.path.exists(UPLOAD_PATH):
 @login_required
 def upload(request):
     file_local = request.FILES.get('image', None)
-    file_web = request.POST.get('url', None).strip()
+    file_web = request.POST.get('url', None)
+    if file_web:
+        file_web = file_web.strip()
     if file_local is None and file_web is None:
         return HttpResponse(status=400)
     image_name = str(uuid.uuid1())
@@ -44,11 +47,10 @@ def upload(request):
         header = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.75 Safari/537.36'
         }
+        print(file_web)
         req = urllib.request.Request(file_web, headers=header)
         try:
             with urllib.request.urlopen(req) as f:
-                if f.getheader('Content-Type') != 'image/jpg':
-                    return JsonResponse({'error': 'wrong jpeg format'})
                 response_data = f.read()
         except urllib.error.HTTPError:
             return JsonResponse({'error': 'fail to download'})
@@ -62,7 +64,7 @@ def upload(request):
         user_id=request.user.id
     )
     operation.save()
-    return JsonResponse({'id': operation.id})
+    return JsonResponse({'id': operation.id, 'addr': os.path.join(BRIEF_PATH, image_name) + '.jpg'})
 
 
 @login_required

@@ -11,7 +11,10 @@ import re
 
 # Create your views here.
 def index(request):
-    return render(request, 'user/index.html', {})
+    if str(request.user) != 'AnonymousUser':
+        return render(request, 'user/index.html', {'username': request.user})
+    else:
+        return render(request, 'user/index.html', {'username': u'用户'}) 
 
 
 def signup(request):

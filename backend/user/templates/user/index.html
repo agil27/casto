@@ -53,11 +53,11 @@
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDd" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  用户
+                                  {{ username }}
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDd">
                                     <a class="dropdown-item px-2" href="../dashboard/">管理面板</a>
-                                    <button class="dropdown-item px-2 btn btn-link" type="button">登出</button>
+                                    <button class="dropdown-item px-2 btn btn-link" type="button" id = "logoutbtn">登出</button>
                                 </div>
                             </li>
                         </ul>
@@ -98,10 +98,6 @@
         <script src="https://cdn.staticfile.org/popper.js/1.13.0/umd/popper.min.js"></script>
         <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
         <script src="{% static "user/scripts/scripts.js" %}"></script>
-        <script>
-            $("#signupBtn").click(function() {
-                window.location.replace("../signup/?name=" + $("#username").val())
-            })
-        </script>
+        <script src="{% static "user/scripts/index.js" %}"></script>
     </body>
 </html>
