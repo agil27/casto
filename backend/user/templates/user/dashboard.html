@@ -140,14 +140,15 @@
                             </div>
                         <div class = "row col-md-12">
                             <ul class="pagination col-md-12">
-                                <li class="page-item"><a class="page-link" href="#">上一页</a></li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item active"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link" href="#">下一页</a></li>
+                                <li class="page-item"><a class="page-link" href="../dashboard/?page={{ prev }}">上一页</a></li>
+                                {% for page in npage %}
+                                    {% if page == cur %}
+                                        <li class="page-item active"><a class="page-link" href="../dashboard/?page={{ page }}">{{ page }}</a></li>
+                                    {% else %}
+                                        <li class="page-item"><a class="page-link" href="../dashboard/?page={{ page }}">{{ page }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                                <li class="page-item"><a class="page-link" href="../dashboard/?page={{ next }}">下一页</a></li>
                             </ul>
                         </div>                        
                 </div>

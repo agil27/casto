@@ -153,7 +153,10 @@ def query(request):
     return render(request, 'user/dashboard.html', {
         'list': li_,
         'username': request.user,
-        'npage': paginator.num_pages
+        'npage': list(range(1, paginator.num_pages + 1)),
+        'cur': page,
+        'prev': max(int(page) - 1, 1),
+        'next': min(int(page) + 1, paginator.num_pages)
     })
 
 
