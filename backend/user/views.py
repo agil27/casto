@@ -13,6 +13,7 @@ import re
 def index(request):
     return render(request, 'user/index.html', {})
 
+
 def signup(request):
     print(request)
     if request.method == 'POST':
@@ -20,7 +21,7 @@ def signup(request):
         username = request.POST.get('username', '').strip()
         password = request.POST.get('password', '').strip()
         print(username, password)
-        if username == '' or password == '' or not valid_password(password): 
+        if username == '' or password == '' or not valid_password(password):
             return JsonResponse({'error': 'invalid parameter'})
         user = User.objects.create_user(username=username, password=password)
         # user = User.objects.create(username=username, password=make_password(password))
@@ -30,6 +31,7 @@ def signup(request):
         if request.user.is_authenticated:
             return redirect('../info/?type=alreadylogin')
         return render(request, 'user/signup.html', {})
+
 
 def login(request):
     if request.method == 'POST':
@@ -47,11 +49,13 @@ def login(request):
             return redirect('../info/?type=alreadylogin')
         return render(request, 'user/login.html', {})
 
+
 @login_required
 def dashboard(request):
     if request.method == 'GET':
-        return render(request, 'user/dashboard.html', {"username" : request.user})
-        
+        return render(request, 'user/dashboard.html', {"username": request.user})
+
+
 @login_required
 def logout(request):
     django_logout(request)
@@ -76,6 +80,7 @@ def valid_password(password):
                 has_letter = True
         return has_number and has_letter
     return False
+
 
 def info(request):
     if request.method == 'GET':

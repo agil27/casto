@@ -1,3 +1,4 @@
+from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from .models import Operation
@@ -116,8 +117,12 @@ def query(request):
     query_set = Operation.objects.filter(user_id=user_id) \
         .filter(upload_time__gt=start_time) \
         .filter(upload_time__lt=end_time) \
-        .filter(processed_image__in=['0', '1'])
-    return JsonResponse({'list': [get_operation_info(op) for op in query_set]})
+        .filter(processed_image__in=['0', '1']) \
+        .order_by('-upload_time')
+    return render(request, 'user/dashboard.html', {
+        'list': [get_operation_info(op) for op in query_set]
+    })
+    # return JsonResponse({'list': [get_operation_info(op) for op in query_set]})
 
 
 @login_required
@@ -148,7 +153,9 @@ def query_admin(request):
         user_ids = [User.objects.get(username=name).id for name in username]
     query_set = Operation.objects.filter(user_id__in=user_ids) \
         .filter(upload_time__gt=start_time) \
-        .filter(upload_time__lt=end_time)
+        .filter(upload_time__lt=end_time) \
+        .filter(net__in=['0', '1']) \
+        .order_by('-upload_time')
     return JsonResponse({'list': [get_operation_info_admin(op) for op in query_set]})
 
 
@@ -178,6 +185,7 @@ def get_operation_info(operation):
         'raw': operation.raw_image,
         'name': operation.raw_image_name,
         'processed': operation.processed_image,
+        'type': operation.net
     }
 
 

@@ -27,7 +27,7 @@ SECRET_KEY = 'ulw&uds*t_=st-_j+0u$_k+^1*-2u-=a5lw3v&@ee^n*nd(#5z'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["166.111.80.49", "127.0.0.1", "183.172.120.224", "183.172.186.76"]
+ALLOWED_HOSTS = ["166.111.80.49", "127.0.0.1", "183.172.120.224", "183.172.186.76", "*"]
 
 AUTH_USER_MODEL = 'user.User'
 
