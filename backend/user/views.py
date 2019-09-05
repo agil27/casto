@@ -25,7 +25,6 @@ def signup(request):
         user = User.objects.create(username=username, password=make_password(password))
         user.save()
         return JsonResponse({'username': username, 'status': True})
-        # return render(request, 'user/login.html', {})
     elif request.method == 'GET':
         return render(request, 'user/signup.html', {})
 

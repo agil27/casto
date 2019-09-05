@@ -16,7 +16,7 @@ from user.models import User
 # Create your views here.
 
 
-UPLOAD_PATH = '../images'
+UPLOAD_PATH = 'operation/static/operation/images'
 
 if not os.path.exists(UPLOAD_PATH):
     os.mkdir(UPLOAD_PATH)
@@ -76,13 +76,13 @@ def net(request, net_id):
     if net_id == 0:
         # TODO processed_path = net(raw_path)
         processed_path = operation.raw_image  # TODO delete later
-        operation.processed_image_0 = processed_path
-        operation.save()
+        operation.net = '0'
     else:
         # TODO processed_path = net(raw_path)
         processed_path = operation.raw_image  # TODO delete later
-        operation.processed_image_1 = processed_path
-        operation.save()
+        operation.net = '1'
+    operation.processed_image = processed_path
+    operation.save()
     return JsonResponse({'data': read_image_from(processed_path)})
 
 
@@ -115,7 +115,8 @@ def query(request):
     user_id = request.user.id
     query_set = Operation.objects.filter(user_id=user_id) \
         .filter(upload_time__gt=start_time) \
-        .filter(upload_time__lt=end_time)
+        .filter(upload_time__lt=end_time) \
+        .filter(processed_image__in=['0', '1'])
     return JsonResponse({'list': [get_operation_info(op) for op in query_set]})
 
 
@@ -171,17 +172,14 @@ def delete_admin(request):
 
 
 def get_operation_info(operation):
-
     return {
         'id': operation.id,
         'time': time.mktime(operation.upload_time.timetuple()),
-        'raw': read_image_from(operation.raw_image),
+        'raw': operation.raw_image,
         'name': operation.raw_image_name,
-        'processed': [
-            read_image_from(operation.processed_image_0),
-            read_image_from(operation.processed_image_1)
-        ]
+        'processed': operation.processed_image,
     }
+
 
 def read_image_from(path):
     try:
@@ -190,6 +188,7 @@ def read_image_from(path):
     except IOError:
         return None
     return data
+
 
 def get_operation_info_admin(operation):
     info = get_operation_info(operation)
