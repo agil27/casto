@@ -95,32 +95,40 @@
                     </div>
                 </div>
                 <div class="col-lg-10 mb-auto">
-                        <div class="mb-4">
-                            {% for item in list %}
-                            <div class="card border-primary h-100">
-                                <div class="row card-body d-flex">
-                                    <div class = "col-lg-9 flex-column align-items-start">
-                                        <h4 class="card-title">操作记录#{{ item.id }}</h4>
-                                        {% if item.net == '0' %}
-                                            <p class="card-text">操作类型：人脸识别</p>
-                                        {% elif item.net == '1' %}
-                                            <p class="card-text">操作类型：性别转换滤镜</p>
-                                        {% endif %}
-                                    </div>
-                                    <div class = "col-lg-3">
-                                        <div class = "row">
-                                            <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="customCheck" checked>
-                                                    <label class="custom-control-label" for="customCheck"></label>
-                                                <button type = "button" class="btn btn-dark border-white mt-auto" id = "see-result">查看结果</button>
-                                                <button type = "button" class="btn btn-danger border-white mt-auto delete-btn" id = "{{ item.id }}">删除记录</button>
-                                            </div>                                                                                
-                                        </div>   
-                                    </div>                       
+                        <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-sm">
+                                        <tbody>
+                                            <tr>
+                                                <th class="w-20"></th>
+                                                <th class="w-25">操作编号</th>
+                                                <th class="w-50">操作日期</th>
+                                                <th class="w-30"></th>
+                                                <th class="w-30"></th>
+                                            </tr>
+                                            {% for item in list %}
+                                            <tr>
+                                                <td><div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="customCheck{{ item.id }}" checked>
+                                                    <label class="custom-control-label" for="customCheck{{ item.id }}"></label></div>
+                                                </td>
+                                                <td>
+                                                    操作记录#{{ item.id }}
+                                                    {% if item.type == '0' %}
+                                                    <span class="badge badge-pill badge-primary">人脸识别</span>
+                                                    {% elif item.type == '1' %}
+                                                    <span class="badge badge-pill badge-primary">性别转换</span>
+                                                    {% endif %}
+                                                </td> 
+                                                <td></td>                                              
+                                                <td><button type = "button" class="btn btn-dark border-white mt-auto" id = "see-result">查看结果</button></td>
+                                                <td><button type = "button" class="btn btn-danger border-white mt-auto delete-btn" id = "{{ item.id }}">删除记录</button></td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-                            {% endfor %}
-                        </div>
                         <div class = "float-right">
                             <button type = "button" class="btn btn-success border-white mt-auto text-white" id = "see-result">全部删除</button>
                         </div>

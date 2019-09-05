@@ -85,8 +85,9 @@ def net(request, net_id):
         processed_path = operation.raw_image  # TODO delete later
         operation.net = '1'
     operation.processed_image = processed_path
+    shrink_path = processed_path[10:] #rid the first 'operation/
     operation.save()
-    return JsonResponse({'data': read_image_from(processed_path)})
+    return JsonResponse({'data': shrink_path})
 
 
 @login_required
@@ -94,6 +95,7 @@ def delete(request):
     user_id = request.user.id
 
     def delete_operation(operation_id):
+        print(operation_id)
         try:
             operation = Operation.objects.get(id=operation_id)
         except KeyError:
@@ -115,7 +117,11 @@ def delete(request):
             return True
 
     ids = request.POST.get('ids[]', [])
-    res = [{'id': id_, 'state': delete_operation(id_)} for id_ in ids]
+    if isinstance(ids, list):
+        res = [{'id': id_, 'state': delete_operation(id_)} for id_ in ids]
+    else:
+        ids = int(ids)
+        res = [{'id': ids, 'state': delete_operation(ids)}]
     return JsonResponse({'list': res})
 
 
@@ -136,7 +142,8 @@ def query(request):
     else:
         query_set = query_set.order_by('-upload_time')
     return render(request, 'user/dashboard.html', {
-        'list': [get_operation_info(op) for op in query_set]
+        'list': [get_operation_info(op) for op in query_set],
+        'username': request.user
     })
     # return JsonResponse({'list': [get_operation_info(op) for op in query_set]})
 
