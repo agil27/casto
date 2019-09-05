@@ -135,7 +135,7 @@ $(document).ready(function () {
         let ids = []
         let checkboxes = $(".checkbox")
         checkboxes.each(function () {
-            if (this.checked) {
+            if (this.checked && this.id !== "checkall") {
                 ids.push(this.id.substring(11))
             }
         })
@@ -146,5 +146,9 @@ $(document).ready(function () {
                 window.location.replace("../dashboard/")
             }
         )
+    })
+
+    $("#checkall").click(function() {
+        $(".checkbox").prop("checked", this.checked)
     })
 })
