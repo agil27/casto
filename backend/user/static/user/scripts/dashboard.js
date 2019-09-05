@@ -139,13 +139,11 @@ $(document).ready(function () {
                 ids.push(this.id.substring(11))
             }
         })
-        console.log(ids)
         $.post(
             "../operation/delete/",
             {"ids": ids},
             function (res) {
-                console.log(res)
-                // window.location.replace("../dashboard/")
+                window.location.replace("../dashboard/")
             }
         )
     })
