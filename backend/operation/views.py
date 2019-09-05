@@ -226,7 +226,7 @@ def delete_admin(request):
 def get_operation_info(operation):
     return {
         'id': operation.id,
-        'time': time.mktime(operation.upload_time.timetuple()),
+        'time': operation.upload_time.strftime("%Y-%m-%d %H:%M"),
         'raw': operation.raw_image,
         'name': operation.raw_image_name,
         'processed': operation.processed_image,
