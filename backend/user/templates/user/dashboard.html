@@ -117,18 +117,15 @@
                     <div class="navbar-collapse collapse justify-content-center" id="collapsingNavbar">
                         <ul class="navbar-nav ml-auto">
                             <li class="nav-item">
-                                <a class="nav-link" href="../login/">登陆</a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link" href="../signup/">注册</a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDd" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  用户
+                                  {{ username }}
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDd">
-                                    <a class="dropdown-item px-2" href="../dashboard/">管理面板</a>
-                                    <button class="dropdown-item px-2 btn btn-link" type="button">登出</button>
+                                    <a class="dropdown-item px-2" id="dashboard_link" href="../dashboard/">管理面板</a>
+                                    <button class="dropdown-item px-2 btn btn-link" type="button" id = "logoutBtn">登出</button>
                                 </div>
                             </li>
                         </ul>

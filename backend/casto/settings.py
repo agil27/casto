@@ -29,6 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["166.111.80.49", "127.0.0.1", "183.172.120.224", "183.172.186.76"]
 
+AUTH_USER_MODEL = 'user.User'
 
 # Application definition
 

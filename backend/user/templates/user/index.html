@@ -23,12 +23,12 @@
                             <div class=>
                                 <div class="col-lg-4 col-sm-6 mx-auto">
                                     <div class="input-group mb-3">
-                                        <input type="text" class="form-control form-control-lg" placeholder="用户名">
+                                        <input type="text" class="form-control form-control-lg" placeholder="用户名" id="username">
                                         <div class="input-group-append">
-                                            <button class="btn btn-outline-light btn-lg rounded-right" type="button">注册</button>
+                                            <button class="btn btn-outline-light btn-lg rounded-right" type="button" id = "signupBtn">注册</button>
                                         </div>
                                     </div>
-                                    <p class ="text-right display-6">已有账户？点击<a class = "display-6" href = "login.html">这里</a>登陆</p>
+                                    <p class ="text-right display-6">已有账户？点击<a class = "display-6" href = "../login/">这里</a>登陆</p>
                                 </div>
                             </div>
                         </div>
@@ -98,5 +98,10 @@
         <script src="https://cdn.staticfile.org/popper.js/1.13.0/umd/popper.min.js"></script>
         <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
         <script src="{% static "user/scripts/scripts.js" %}"></script>
+        <script>
+            $("#signupBtn").click(function() {
+                window.location.replace("../signup/?name=" + $("#username").val())
+            })
+        </script>
     </body>
 </html>

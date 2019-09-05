@@ -5,8 +5,8 @@ function GetQueryString(name)
      if(r!=null)return  unescape(r[2]); return null;
 }
 
-function onSignupClicked() {
-    console.log("Signup Button Clicked")
+function onLoginBtnClicked() {
+    console.log("Login Button Clicked")
     let name = $("#username").val()
     let pwd = $("#password").val()
     console.log(name, pwd)
@@ -19,16 +19,16 @@ function onSignupClicked() {
             password: pwd
         }
         console.log(data)
-        $.post("../signup/", data, function(res) {
+        $.post("../login/", data, function(res) {
+            console.log(res)
             if (res.status) {
-                window.location.replace("../login/");
+                window.location.replace("../dashboard/")
             }
         })
     }
 }
 
 $(document).ready(function() {
-    let signup_btn = $("#btnSignup")
-    signup_btn.click(onSignupClicked)
-    $("#username").val(GetQueryString("name"))
+    let login_btn = $("#btnLogin")
+    login_btn.click(onLoginBtnClicked)
 })
