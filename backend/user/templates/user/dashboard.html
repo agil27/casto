@@ -110,7 +110,7 @@
                                     <div class = "col-lg-3">
                                         <div class = "row">
                                             <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="customCheck" checked>
+                                                    <input type="checkbox" class="custom-control-input checkbox" id="{{ item.id }}" checked>
                                                     <label class="custom-control-label" for="customCheck"></label>
                                                 <button type = "button" class="btn btn-dark border-white mt-auto" id = "see-result">查看结果</button>
                                                 <button type = "button" class="btn btn-danger border-white mt-auto delete-btn" id = "{{ item.id }}">删除记录</button>
@@ -122,7 +122,7 @@
                             {% endfor %}
                         </div>
                         <div class = "float-right">
-                            <button type = "button" class="btn btn-success border-white mt-auto text-white" id = "see-result">全部删除</button>
+                            <button type = "button" class="btn btn-success border-white mt-auto text-white" id = "delete-all-btn">全部删除</button>
                         </div>
                 </div>
             </div>

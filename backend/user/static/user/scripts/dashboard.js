@@ -15,6 +15,7 @@ $(document).ready(function () {
     let detect_btn = $("#detect_btn")
     let gender_btn = $("#gender_btn")
     let delete_btns = $(".delete-btn")
+    let delete_all_btn = $("#delete-all-btn")
 
     $("#function_block").hide()
 
@@ -86,19 +87,35 @@ $(document).ready(function () {
         window.location.replace("../logout/")
     })
 
-    console.log(delete_btns)
     delete_btns.each(function () {
         this.onclick = function () {
             let operation_id = this.id
-            console.log(operation_id)
             $.post(
                 "../operation/delete/",
                 {"ids": [operation_id]},
                 function (res) {
-                    console.log(res)
                     window.location.replace("../dashboard/")
                 }
             )
         }
+    })
+
+    delete_all_btn.click(function () {
+        let ids = []
+        let checkboxes = $(".checkbox")
+        checkboxes.each(function () {
+            if (this.checked) {
+                ids.push(this.id)
+            }
+        })
+        console.log(ids)
+        $.post(
+            "../operation/delete/",
+            {"ids": ids},
+            function (res) {
+                console.log(res)
+                // window.location.replace("../dashboard/")
+            }
+        )
     })
 })
