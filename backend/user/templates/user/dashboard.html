@@ -100,10 +100,10 @@
                             <div class="card border-primary h-100">
                                 <div class="row card-body d-flex">
                                     <div class = "col-lg-9 flex-column align-items-start">
-                                        <h4 class="card-title">操作记录#{{ forloop.revcounter }}</h4>
-                                        {% if list.net == '0' %}
+                                        <h4 class="card-title">操作记录#{{ item.id }}</h4>
+                                        {% if item.net == '0' %}
                                             <p class="card-text">操作类型：人脸识别</p>
-                                        {% elif list.net == '1' %}
+                                        {% elif item.net == '1' %}
                                             <p class="card-text">操作类型：性别转换滤镜</p>
                                         {% endif %}
                                     </div>
@@ -113,7 +113,7 @@
                                                     <input type="checkbox" class="custom-control-input" id="customCheck" checked>
                                                     <label class="custom-control-label" for="customCheck"></label>
                                                 <button type = "button" class="btn btn-dark border-white mt-auto" id = "see-result">查看结果</button>
-                                                <button type = "button" class="btn btn-danger border-white mt-auto" id = "see-result">删除记录</button>
+                                                <button type = "button" class="btn btn-danger border-white mt-auto delete-btn" id = "{{ item.id }}">删除记录</button>
                                             </div>                                                                                
                                         </div>   
                                     </div>                       

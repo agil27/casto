@@ -1,11 +1,11 @@
-function GetQueryString(name)
-{
-     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
-     var r = window.location.search.substr(1).match(reg);
-     if(r!=null)return  unescape(r[2]); return null;
+function GetQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]);
+    return null;
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
     let explore_btn = $("#explore_btn")
     let upload_btn = $("#upload_btn")
     let file_input = $("#file_input")
@@ -14,24 +14,25 @@ $(document).ready(function() {
     let logout_btn = $("#logoutBtn")
     let detect_btn = $("#detect_btn")
     let gender_btn = $("#gender_btn")
+    let delete_btns = $(".delete-btn")
 
     $("#function_block").hide()
 
-    explore_btn.click(function() {
+    explore_btn.click(function () {
         file_input.click()
-    }) 
+    })
 
-    file_input.change(function() {
+    file_input.change(function () {
         file_addr.val(file_input.val())
         let formData = new FormData();
         formData.append("image", file_input[0].files[0]);
         $.ajax({
             url: "../operation/upload/",
-            type:'post',
+            type: 'post',
             data: formData,
             contentType: false,
             processData: false,
-            success: function(res){
+            success: function (res) {
                 console.log(res)
                 if (res.addr) {
                     $("#preview").attr("src", "../static/" + res.addr)
@@ -43,21 +44,21 @@ $(document).ready(function() {
                     $("#web_desc").text("已禁用网络上传")
                     $("#status").text("图片已经上传，请选择您的服务")
                     $("#function_block").show()
-                }           
+                }
                 else if (res.error) {
                     $("#file_desc").text("本地图片上传失败，请重新选择")
-                }    
+                }
             }
         })
     })
 
-    upload_btn.click(function() {
+    upload_btn.click(function () {
         let file_web = web_addr.val()
         console.log(file_web)
         $.post(
-            "../operation/upload/", 
+            "../operation/upload/",
             {"url": file_web},
-            function(res) {
+            function (res) {
                 console.log(res)
                 if (res.addr) {
                     $("#preview").attr("src", "../static/" + res.addr)
@@ -77,11 +78,27 @@ $(document).ready(function() {
         )
     })
 
-    detect_btn.click(function() {
-        
+    detect_btn.click(function () {
+
     })
 
-    logout_btn.click(function() {
-        window.location.replace("../logout")
+    logout_btn.click(function () {
+        window.location.replace("../logout/")
+    })
+
+    console.log(delete_btns)
+    delete_btns.each(function () {
+        this.onclick = function () {
+            let operation_id = this.id
+            console.log(operation_id)
+            $.post(
+                "../operation/delete/",
+                {"ids": [operation_id]},
+                function (res) {
+                    console.log(res)
+                    window.location.replace("../dashboard/")
+                }
+            )
+        }
     })
 })
