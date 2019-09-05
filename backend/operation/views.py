@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage, InvalidPage
 from .models import Operation
 import uuid
 import pytz
@@ -85,7 +86,7 @@ def net(request, net_id):
         processed_path = operation.raw_image  # TODO delete later
         operation.net = '1'
     operation.processed_image = processed_path
-    shrink_path = processed_path[10:] #rid the first 'operation/
+    shrink_path = processed_path[10:]  # rid the first 'operation/
     operation.save()
     return JsonResponse({'data': shrink_path})
 
@@ -124,8 +125,8 @@ def delete(request):
 @login_required
 def query(request):
     user_id = request.user.id
-    query_set = Operation.objects.filter(user_id=user_id)# \
-        # .filter(processed_image__in=['0', '1'])
+    query_set = Operation.objects.filter(user_id=user_id)  # \
+    # .filter(processed_image__in=['0', '1'])
     if request.method == 'POST':
         start = request.POST.get('start', 0)
         end = request.POST.get('end', 9999999999)
@@ -135,13 +136,25 @@ def query(request):
             .filter(upload_time__gt=start_time) \
             .filter(upload_time__lt=end_time) \
             .order_by('-upload_time')
+        page = 0
     else:
+        page = request.GET.get('page', 0)
         query_set = query_set.order_by('-upload_time')
+    list_ = [get_operation_info(op) for op in query_set]
+    paginator = Paginator(list_, 10)
+    try:
+        li_ = paginator.page(page)
+    except PageNotAnInteger:
+        li_ = paginator.page(1)
+    except InvalidPage:
+        li_ = paginator.page(1)
+    except EmptyPage:
+        li_ = paginator.page(paginator.num_pages)
     return render(request, 'user/dashboard.html', {
-        'list': [get_operation_info(op) for op in query_set],
-        'username': request.user
+        'list': li_,
+        'username': request.user,
+        'npage': paginator.num_pages
     })
-    # return JsonResponse({'list': [get_operation_info(op) for op in query_set]})
 
 
 @login_required
