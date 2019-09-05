@@ -101,6 +101,16 @@ def delete(request):
         if operation.user_id != user_id:
             return False
         else:
+            raw = operation.raw_image
+            try:
+                os.remove(raw)
+            except FileNotFoundError:
+                pass
+            processed = operation.processed_image
+            try:
+                os.remove(processed)
+            except FileNotFoundError:
+                pass
             operation.delete()
             return True
 
@@ -176,6 +186,16 @@ def delete_admin(request):
             operation = Operation.objects.get(id=operation_id)
         except KeyError:
             return False
+        raw = operation.raw_image
+        try:
+            os.remove(raw)
+        except FileNotFoundError:
+            pass
+        processed = operation.processed_image
+        try:
+            os.remove(processed)
+        except FileNotFoundError:
+            pass
         operation.delete()
         return True
 
