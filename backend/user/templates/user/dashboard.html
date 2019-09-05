@@ -119,7 +119,7 @@
                                             {% for item in list %}
                                             <tr>
                                                 <td><div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="customCheck{{ item.id }}" checked>
+                                                    <input type="checkbox" class="custom-control-input checkbox" id="customCheck{{ item.id }}" checked>
                                                     <label class="custom-control-label" for="customCheck{{ item.id }}"></label></div>
                                                 </td>
                                                 <td>
@@ -138,6 +138,8 @@
                                         </tbody>
                                 </table>
                             </div>
+                        <div class = "float-right">
+                            <button type = "button" class="btn btn-success border-white mt-auto text-white" id = "delete-all-btn">全部删除</button>
                         </div>
                         <div class = "row col-md-12">
                             <ul class="pagination col-md-12">

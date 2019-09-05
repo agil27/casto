@@ -45,6 +45,7 @@ $(document).ready(function () {
     let web_addr = $("#web_addr")
     let logout_btn = $("#logoutBtn")
     let delete_btns = $(".delete-btn")
+    let delete_all_btn = $("#delete-all-btn")
 
     $("#function_block").hide()
 
@@ -116,20 +117,34 @@ $(document).ready(function () {
         window.location.replace("../logout/")
     })
 
-    console.log(delete_btns)
     delete_btns.each(function () {
         this.onclick = function () {
             console.log(this)
             let operation_id = this.id
-            console.log(operation_id)
             $.post(
                 "../operation/delete/",
                 {"ids": [operation_id]},
                 function (res) {
-                    console.log(res)
                     window.location.replace("../dashboard/")
                 }
             )
         }
+    })
+
+    delete_all_btn.click(function () {
+        let ids = []
+        let checkboxes = $(".checkbox")
+        checkboxes.each(function () {
+            if (this.checked) {
+                ids.push(this.id.substring(11))
+            }
+        })
+        $.post(
+            "../operation/delete/",
+            {"ids": ids},
+            function (res) {
+                window.location.replace("../dashboard/")
+            }
+        )
     })
 })

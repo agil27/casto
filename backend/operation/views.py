@@ -116,12 +116,8 @@ def delete(request):
             operation.delete()
             return True
 
-    ids = request.POST.get('ids[]', [])
-    if isinstance(ids, list):
-        res = [{'id': id_, 'state': delete_operation(id_)} for id_ in ids]
-    else:
-        ids = int(ids)
-        res = [{'id': ids, 'state': delete_operation(ids)}]
+    ids = request.POST.getlist('ids[]', [])
+    res = [{'id': id_, 'state': delete_operation(id_)} for id_ in ids]
     return JsonResponse({'list': res})
 
 
@@ -206,7 +202,7 @@ def delete_admin(request):
         operation.delete()
         return True
 
-    ids = request.POST.get('ids[]', [])
+    ids = request.POST.getlist('ids[]', [])
     res = [{'id': id_, 'state': delete_operation(id_)} for id_ in ids]
     return JsonResponse({'list': res})
 
