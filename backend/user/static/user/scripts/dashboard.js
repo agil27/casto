@@ -78,9 +78,13 @@ $(document).ready(function() {
     })
 
     detect_btn.click(function() {
-        
+
     })
 
+    gender_btn.click(function() {
+
+    })
+    
     logout_btn.click(function() {
         window.location.replace("../logout")
     })
