@@ -25,6 +25,7 @@ urlpatterns = [
     path('login/', user.views.login),
     path('logout/', user.views.logout),
     path('dashboard/', user.views.dashboard),
+    path('info/', user.views.info),
     path('operation/upload/', operation.views.upload),
     path('operation/<int:net_id>/net/', operation.views.net),
     path('operation/delete/', operation.views.delete),
@@ -34,7 +35,6 @@ urlpatterns = [
     path('admin/logout/', user.views.logout),
     path('admin/query/', operation.views.query_admin),
     path('admin/delete/', operation.views.delete_admin),
-
     ## require_login 失败会重定向至该页面
     # path('account/login/', user.views.please_login),
 ]

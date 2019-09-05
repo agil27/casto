@@ -1,3 +1,10 @@
+function GetQueryString(name)
+{
+     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+     var r = window.location.search.substr(1).match(reg);
+     if(r!=null)return  unescape(r[2]); return null;
+}
+
 function onLoginBtnClicked() {
     console.log("Login Button Clicked")
     let name = $("#username").val()
@@ -15,7 +22,7 @@ function onLoginBtnClicked() {
         $.post("../login/", data, function(res) {
             console.log(res)
             if (res.status) {
-                window.location.replace("../dashboard/");
+                window.location.replace("../dashboard/")
             }
         })
     }
