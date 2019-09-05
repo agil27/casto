@@ -25,7 +25,7 @@ urlpatterns = [
     path('signup/', user.views.signup),
     path('login/', user.views.login),
     path('logout/', user.views.logout),
-    path('dashboard/', user.views.dashboard),
+    path('dashboard/', operation.views.query),
     path('info/', user.views.info),
     path('operation/upload/', operation.views.upload),
     path('operation/<int:net_id>/net/', operation.views.net),

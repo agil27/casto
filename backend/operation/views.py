@@ -101,26 +101,40 @@ def delete(request):
         if operation.user_id != user_id:
             return False
         else:
+            raw = operation.raw_image
+            try:
+                os.remove(raw)
+            except FileNotFoundError:
+                pass
+            processed = operation.processed_image
+            try:
+                os.remove(processed)
+            except FileNotFoundError:
+                pass
             operation.delete()
             return True
 
-    ids = request.POST.get('ids', [])
+    ids = request.POST.get('ids[]', [])
     res = [{'id': id_, 'state': delete_operation(id_)} for id_ in ids]
     return JsonResponse({'list': res})
 
 
 @login_required
 def query(request):
-    start = request.POST.get('start', 0)
-    end = request.POST.get('end', 9999999999)
-    start_time = datetime.datetime.fromtimestamp(start, tz=pytz.timezone('UTC'))
-    end_time = datetime.datetime.fromtimestamp(end, tz=pytz.timezone('UTC'))
     user_id = request.user.id
-    query_set = Operation.objects.filter(user_id=user_id) \
-        .filter(upload_time__gt=start_time) \
-        .filter(upload_time__lt=end_time) \
-        .filter(processed_image__in=['0', '1']) \
-        .order_by('-upload_time')
+    query_set = Operation.objects.filter(user_id=user_id)# \
+        # .filter(processed_image__in=['0', '1'])
+    if request.method == 'POST':
+        start = request.POST.get('start', 0)
+        end = request.POST.get('end', 9999999999)
+        start_time = datetime.datetime.fromtimestamp(start, tz=pytz.timezone('UTC'))
+        end_time = datetime.datetime.fromtimestamp(end, tz=pytz.timezone('UTC'))
+        query_set = query_set \
+            .filter(upload_time__gt=start_time) \
+            .filter(upload_time__lt=end_time) \
+            .order_by('-upload_time')
+    else:
+        query_set = query_set.order_by('-upload_time')
     return render(request, 'user/dashboard.html', {
         'list': [get_operation_info(op) for op in query_set]
     })
@@ -148,7 +162,7 @@ def query_admin(request):
     end = request.POST.get('end', 9999999999)
     start_time = datetime.datetime.fromtimestamp(start, tz=pytz.timezone('UTC'))
     end_time = datetime.datetime.fromtimestamp(end, tz=pytz.timezone('UTC'))
-    username = request.POST.get('username', [])
+    username = request.POST.get('username[]', [])
     if not username:
         user_ids = [u.id for u in User.objects.all()]
     else:
@@ -172,10 +186,20 @@ def delete_admin(request):
             operation = Operation.objects.get(id=operation_id)
         except KeyError:
             return False
+        raw = operation.raw_image
+        try:
+            os.remove(raw)
+        except FileNotFoundError:
+            pass
+        processed = operation.processed_image
+        try:
+            os.remove(processed)
+        except FileNotFoundError:
+            pass
         operation.delete()
         return True
 
-    ids = request.POST.get('ids', [])
+    ids = request.POST.get('ids[]', [])
     res = [{'id': id_, 'state': delete_operation(id_)} for id_ in ids]
     return JsonResponse({'list': res})
 
