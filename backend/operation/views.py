@@ -19,7 +19,7 @@ from user.models import User
 UPLOAD_PATH = 'operation/static/operation/images'
 
 if not os.path.exists(UPLOAD_PATH):
-    os.mkdir(UPLOAD_PATH)
+    os.makedirs(UPLOAD_PATH)
 
 
 @login_required
