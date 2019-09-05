@@ -5,6 +5,38 @@ function GetQueryString(name) {
     return null;
 }
 
+function setDetectBtn(op_id) {
+    $("#detect_btn").click(function() {
+        $("#status").text("正在进行图片转换，请稍候……")
+        $("#function_block").hide()
+        $.post(
+            "../operation/0/net/",
+            {"id": op_id},
+            function(res) {
+                console.log(res.data)
+                $("#preview").attr("src", "../" + res.data)
+                $("#status").text("已完成转换，刷新页面可以查看操作记录")
+            }
+        )
+    })
+}
+
+function setGenderBtn(op_id) {
+    $("#gender_btn").click(function() {
+        $("#status").text("正在进行图片转换，请稍候……")
+        $("#function_block").hide()
+        $.post(
+            "../operation/1/net/",
+            {"id": op_id},
+            function(res) {
+                console.log(res.data)
+                $("#preview").attr("src", "../" + res.data)
+                $("#status").text("已完成转换，刷新页面可以查看操作记录")
+            }
+        )
+    })
+}
+
 $(document).ready(function () {
     let explore_btn = $("#explore_btn")
     let upload_btn = $("#upload_btn")
@@ -12,8 +44,6 @@ $(document).ready(function () {
     let file_addr = $("#file_addr")
     let web_addr = $("#web_addr")
     let logout_btn = $("#logoutBtn")
-    let detect_btn = $("#detect_btn")
-    let gender_btn = $("#gender_btn")
     let delete_btns = $(".delete-btn")
     let delete_all_btn = $("#delete-all-btn")
 
@@ -45,6 +75,8 @@ $(document).ready(function () {
                     $("#web_desc").text("已禁用网络上传")
                     $("#status").text("图片已经上传，请选择您的服务")
                     $("#function_block").show()
+                    setDetectBtn(res.id)
+                    setGenderBtn(res.id)
                 }
                 else if (res.error) {
                     $("#file_desc").text("本地图片上传失败，请重新选择")
@@ -71,6 +103,8 @@ $(document).ready(function () {
                     $("#web_desc").text("网络图片已上传")
                     $("#status").text("图片已经上传，请选择您的服务")
                     $("#function_block").show()
+                    setDetectBtn(res.id)
+                    setGenderBtn(res.id)
                 }
                 else if (res.error) {
                     $("#web_desc").text("网络图片上传失败，请换一张")
@@ -79,16 +113,13 @@ $(document).ready(function () {
         )
     })
 
-    detect_btn.click(function () {
-
-    })
-
     logout_btn.click(function () {
         window.location.replace("../logout/")
     })
 
     delete_btns.each(function () {
         this.onclick = function () {
+            console.log(this)
             let operation_id = this.id
             $.post(
                 "../operation/delete/",
@@ -105,7 +136,7 @@ $(document).ready(function () {
         let checkboxes = $(".checkbox")
         checkboxes.each(function () {
             if (this.checked) {
-                ids.push(this.id)
+                ids.push(this.id.substring(11))
             }
         })
         console.log(ids)
