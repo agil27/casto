@@ -1,0 +1,150 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Casto Landing Page</title>
+        <meta name="description" content="Casto is a online image casting app" />
+        <link href="{% static "user/style/bootstrap.min.css" %}" rel="stylesheet">
+        <link href="{% static "user/style/ionicons.css" %}" rel="stylesheet">
+        <link href="{% static "user/style/theme.css" %}" rel="stylesheet">
+        <link href="{% static "user/style/template.css" %}" rel="stylesheet">
+    </head>
+    
+    <body>   
+        <section id="container" class="container pb-5">
+            <div class="row my-2 d-flex centerblock">
+
+            </div>
+            <div class="row d-flex m-0">
+                <div class="col-lg-2 mb-auto">
+                    <div class="list-group">
+                        <a href="#" class="list-group-item list-group-item-action active">全部记录</a>
+                        <a href="#" class="list-group-item list-group-item-action">已完成</a>
+                        <a href="#" class="list-group-item list-group-item-action">进行中</a>
+                    </div>
+                </div>
+                <div class="col-lg-10 mb-auto">
+                        <div class = "row col-md-2 col-md-push-2">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="checkall" checked>
+                                <label class="custom-control-label" for="checkall">全选</label>
+                            </div>
+                            <div class = "col-md-2 float-right">
+                                <button type = "button" class="btn btn-outline-primary btn-sm mt-auto" id = "delete-all-btn">批量删除</button>
+                            </div>
+                        </div> 
+                        <p class = "h1"></p>
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-sm">
+                                        <tbody>
+                                            <tr>
+                                                <th class="w-20"></th>
+                                                <th class="w-25">操作编号</th>
+                                                <th class="w-25">用户名</th>
+                                                <th class="w-50">操作日期</th>
+                                                <th class="w-30"></th>
+                                                <th class="w-30"></th>
+                                            </tr>
+                                            {% for item in list %}
+                                            <tr>
+                                                <td><div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input checkbox" id="customCheck{{ item.id }}" checked>
+                                                    <label class="custom-control-label" for="customCheck{{ item.id }}"></label></div>
+                                                </td>
+                                                <td>
+                                                    操作记录#{{ item.id }}
+                                                    {% if item.type == '0' %}
+                                                    <span class="badge badge-pill badge-primary">人脸识别</span>
+                                                    {% elif item.type == '1' %}
+                                                    <span class="badge badge-pill badge-primary">性别转换</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>{{ item.username }}</td>
+                                                <td>{{ item.time }}</td>
+                                                <td><button type = "button" class="btn btn-dark border-white mt-auto" id = "see-result">查看结果</button></td>
+                                                <td><button type = "button" class="btn btn-danger border-white mt-auto delete-btn" id = "{{ item.id }}">删除记录</button></td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                </table>
+                            </div>
+                        <div class = "row col-md-12">
+                            <ul class="pagination col-md-12">
+                                <li class="page-item"><a class="page-link" href="../dashboard/?page={{ prev }}">上一页</a></li>
+                                {% for page in npage %}
+                                    {% if page == cur %}
+                                        <li class="page-item active"><a class="page-link" href="../dashboard/?page={{ page }}">{{ page }}</a></li>
+                                    {% else %}
+                                        <li class="page-item"><a class="page-link" href="../dashboard/?page={{ page }}">{{ page }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                                <li class="page-item"><a class="page-link" href="../dashboard/?page={{ next }}">下一页</a></li>
+                            </ul>
+                        </div>                        
+                </div>
+            </div>
+        </section>
+        <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary" id="navbar1">
+                <div class="container">
+                    <a class="navbar-brand mr-1 mb-1 mt-0" href="../index/">Casto</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsingNavbar">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse justify-content-center" id="collapsingNavbar">
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="../signup/">注册</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDd" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  {{ username }}
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDd">
+                                    <a class="dropdown-item px-2" id="dashboard_link" href="../dashboard/">管理面板</a>
+                                    <button class="dropdown-item px-2 btn btn-link" type="button" id = "logoutBtn">登出</button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <footer id="footer" class="bg-dark text-light py-5">
+                    <div class="container py-5">
+                        <div class="row">
+                            <div class="col-6 col-md-6 col-lg-3 mb-2">
+                                <h6 class="text-uppercase">作者</h6>
+                                <ul class="nav flex-column">
+                                    <li><a class="text-white" target="ext" rel="nofollow" href="https://agil27.github.io" title="汪元标">汪元标</a></li>
+                                    <li><a class="text-white" target="ext" rel="nofollow" href="https://zhangxwww.github.io" title="张欣炜">张欣炜</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-6 col-md-6 col-lg-3 mb-2">
+                                <h6 class="text-uppercase">开发工具</h6>
+                                <ul class="nav flex-column">
+                                    <li><a class="text-white" target="_new" href="https://getbootstrap.com">Bootstrap4</a></li>
+                                    <li><a class="text-white" target="_new" href="https://www.djangoproject.com/">Django2.0</a></li>
+                                    <li><a class="text-white" target="_new" href="https://www.sqlite.org/index.html">Sqlite3</a></li>
+                                    <li><a class="text-white" target="_new" href="https://pytorch.org/">PyTorch</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-12 col-md-12 col-lg-6 mb-2 text-right">
+                                <h6 class="text-uppercase">信息</h6>
+                                <ul class="nav flex-column">
+                                    <li>清华大学软件学院</li>
+                                    <li>2019年8月</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!--/row-->
+                    </div>
+                </footer>
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/popper.js/1.13.0/umd/popper.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="{% static "user/scripts/scripts.js" %}"></script>
+    <script src="{% static "admin/scripts/dashboard.js" %}"></script>
+    </body>
+</html>

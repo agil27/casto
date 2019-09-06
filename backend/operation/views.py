@@ -206,7 +206,7 @@ def query_admin(request):
         li_ = paginator.page(paginator.num_pages)
     except InvalidPage:
         li_ = paginator.page(1)
-    return render(request, 'user/dashboard.html', {
+    return render(request, 'admin/dashboard.html', {
         'list': li_,
         'username': request.user,
         'npage': list(range(1, paginator.num_pages + 1)),
