@@ -24,7 +24,6 @@ class CompactCNN:
     def __call__(self, image_path):
         print('loading image...')
         raw_img = Image.open(image_path)
-        origin_size = raw_img.size
         raw_img = raw_img.resize((96, 96), Image.ANTIALIAS)
         to_tensor = ToTensor()
         img = to_tensor(raw_img)
@@ -43,7 +42,7 @@ class CompactCNN:
         }
         emotion = cls2emotion[cls]
         print('drawing...')
-        raw_img = raw_img.resize(origin_size, Image.ANTIALIAS)
+        raw_img = Image.open(image_path)
         self._draw(raw_img, emotion)
         name = str(uuid.uuid1()) + '.jpg'
         path = os.path.join(OUTPUT_PATH, name)
@@ -52,7 +51,8 @@ class CompactCNN:
 
     @staticmethod
     def _draw(image, string):
-        font = ImageFont.truetype(FONT, 20)
+        font_size = image.size[0] // 5
+        font = ImageFont.truetype(FONT, font_size)
         draw = ImageDraw.Draw(image)
         x, y = 10, 10
         draw.text((x, y), string, font=font)
