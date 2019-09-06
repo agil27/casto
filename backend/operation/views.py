@@ -6,7 +6,6 @@ from .models import Operation
 import uuid
 import pytz
 import datetime
-import time
 import os
 import sys
 import urllib.request
@@ -40,7 +39,7 @@ def upload(request):
         _, suffix = os.path.splitext(raw_name)
         if not suffix in ['.jpg', '.JPEG', '.jpeg']:
             return JsonResponse({'error': 'wrong jpeg format'})
-        path += suffix
+        path += '.jpg'
         with open(path, 'wb') as file:
             for chuck in file_local.chunks():
                 file.write(chuck)
@@ -130,26 +129,28 @@ def query(request):
     if request.method == 'POST':
         start = request.POST.get('start', 0)
         end = request.POST.get('end', 9999999999)
-        start_time = datetime.datetime.fromtimestamp(start, tz=pytz.timezone('UTC'))
-        end_time = datetime.datetime.fromtimestamp(end, tz=pytz.timezone('UTC'))
-        query_set = query_set \
-            .filter(upload_time__gt=start_time) \
-            .filter(upload_time__lt=end_time) \
-            .order_by('-upload_time')
-        page = 0
-    else:
+        page = request.POST.get('page', 0)
+    else: # GET
         page = request.GET.get('page', 0)
-        query_set = query_set.order_by('-upload_time')
+        start = request.GET.get('start', 0)
+        end = request.GET.get('end', 9999999999)
+    start_time = datetime.datetime.fromtimestamp(start, tz=pytz.timezone('UTC'))
+    end_time = datetime.datetime.fromtimestamp(end, tz=pytz.timezone('UTC'))
+    query_set = query_set \
+        .filter(upload_time__gt=start_time) \
+        .filter(upload_time__lt=end_time) \
+        .order_by('-upload_time')
+    query_set = query_set.order_by('-upload_time')
     list_ = [get_operation_info(op) for op in query_set]
     paginator = Paginator(list_, 10)
     try:
         li_ = paginator.page(page)
     except PageNotAnInteger:
         li_ = paginator.page(1)
-    except InvalidPage:
-        li_ = paginator.page(1)
     except EmptyPage:
         li_ = paginator.page(paginator.num_pages)
+    except InvalidPage:
+        li_ = paginator.page(1)
     return render(request, 'user/dashboard.html', {
         'list': li_,
         'username': request.user,
@@ -177,21 +178,42 @@ def query_admin(request):
     user = request.user
     if not user.admin:
         return JsonResponse({'error': 'permission denied'})
-    start = request.POST.get('start', 0)
-    end = request.POST.get('end', 9999999999)
+    user_id = request.user.id
+    query_set = Operation.objects.filter(user_id=user_id)  # \
+    # .filter(processed_image__in=['0', '1'])
+    if request.method == 'POST':
+        start = request.POST.get('start', 0)
+        end = request.POST.get('end', 9999999999)
+        page = request.POST.get('page', 0)
+    else:  # GET
+        page = request.GET.get('page', 0)
+        start = request.GET.get('start', 0)
+        end = request.GET.get('end', 9999999999)
     start_time = datetime.datetime.fromtimestamp(start, tz=pytz.timezone('UTC'))
     end_time = datetime.datetime.fromtimestamp(end, tz=pytz.timezone('UTC'))
-    username = request.POST.get('username[]', [])
-    if not username:
-        user_ids = [u.id for u in User.objects.all()]
-    else:
-        user_ids = [User.objects.get(username=name).id for name in username]
-    query_set = Operation.objects.filter(user_id__in=user_ids) \
+    query_set = query_set \
         .filter(upload_time__gt=start_time) \
         .filter(upload_time__lt=end_time) \
-        .filter(net__in=['0', '1']) \
         .order_by('-upload_time')
-    return JsonResponse({'list': [get_operation_info_admin(op) for op in query_set]})
+    query_set = query_set.order_by('-upload_time')
+    list_ = [get_operation_info_admin(op) for op in query_set]
+    paginator = Paginator(list_, 10)
+    try:
+        li_ = paginator.page(page)
+    except PageNotAnInteger:
+        li_ = paginator.page(1)
+    except EmptyPage:
+        li_ = paginator.page(paginator.num_pages)
+    except InvalidPage:
+        li_ = paginator.page(1)
+    return render(request, 'user/dashboard.html', {
+        'list': li_,
+        'username': request.user,
+        'npage': list(range(1, paginator.num_pages + 1)),
+        'cur': page,
+        'prev': max(int(page) - 1, 1),
+        'next': min(int(page) + 1, paginator.num_pages)
+    })
 
 
 @login_required
