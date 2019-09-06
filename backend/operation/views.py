@@ -3,6 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage, InvalidPage
 from .models import Operation
+from .net.CompactCNN_for_FER import CompactCNN
 import uuid
 import pytz
 import datetime
@@ -77,8 +78,9 @@ def net(request, net_id):
     if operation.user_id != user_id:
         return JsonResponse({'error': 'not exists'})
     if net_id == 0:
-        # TODO processed_path = net(raw_path)
-        processed_path = operation.raw_image  # TODO delete later
+        net_ = CompactCNN()
+        processed_path = net_(operation.raw_image)
+        # processed_path = operation.raw_image  # TODO delete later
         operation.net = '0'
     else:
         # TODO processed_path = net(raw_path)

@@ -3,5 +3,5 @@ $("#signupBtn").click(function() {
 })
 
 $("#logoutbtn").click(function() {
-    window.location.replace("../logout")
+    window.location.replace("../logout/")
 })
