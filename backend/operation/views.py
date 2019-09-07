@@ -191,6 +191,8 @@ def query_admin(request):
         end = request.POST.get('end', 9999999999)
         page = request.POST.get('page', 0)
     else:  # GET
+        range_show = request.GET.get('range', 'no')
+        rangequery = True if range_show == 'yes' else False
         page = request.GET.get('page', 0)
         start = request.GET.get('start', 0)
         end = request.GET.get('end', 9999999999)
@@ -213,11 +215,12 @@ def query_admin(request):
         li_ = paginator.page(1)
     return render(request, 'admin/dashboard.html', {
         'list': li_,
-        'username': request.user,
         'npage': list(range(1, paginator.num_pages + 1)),
+        'username': user.username,
         'cur': page,
         'prev': max(int(page) - 1, 1),
-        'next': min(int(page) + 1, paginator.num_pages)
+        'next': min(int(page) + 1, paginator.num_pages),
+        'rangequery': rangequery
     })
 
 

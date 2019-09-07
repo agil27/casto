@@ -10,6 +10,9 @@
         <link href="{% static "user/style/ionicons.css" %}" rel="stylesheet">
         <link href="{% static "user/style/theme.css" %}" rel="stylesheet">
         <link href="{% static "user/style/template.css" %}" rel="stylesheet">
+        <link rel="stylesheet" href="https://getbootstrap.com/assets/css/docs.min.css" />
+        <link href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <link href="{% static "user/style/tempusdominus-bootstrap-4.css" %}" rel="stylesheet">
     </head>
     
     <body class = "d-flex flex-column h-100">   
@@ -20,21 +23,62 @@
             <div class="row d-flex m-0">
                 <div class="col-lg-2 mb-auto">
                     <div class="list-group">
-                        <a href="#" class="list-group-item list-group-item-action active">全部记录</a>
-                        <a href="#" class="list-group-item list-group-item-action">已完成</a>
-                        <a href="#" class="list-group-item list-group-item-action">进行中</a>
+                        <a href="../dashboard/#data" class="list-group-item list-group-item-action active" id = "allrecord">全部记录</a>
+                        <a href="../dashboard/?range=yes#data" class="list-group-item list-group-item-action" id = "timequery">按时间查询</a>
                     </div>
                 </div>
                 <div class="col-lg-10 mb-auto">
-                        <div class = "row col-md-2 col-md-push-2">
-                            <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="checkall" checked>
-                                <label class="custom-control-label" for="checkall">全选</label>
+                    {% if rangequery %}
+                        <div class="container">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+                                                <label class = "label mr-2 mt-1">开始时间</label>
+                                                <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker1"/>
+                                                <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <div class="input-group date" id="datetimepicker2" data-target-input="nearest">
+                                                    <label class = "label mr-2 mt-1">截止时间    </label>
+                                                    <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker2"/>
+                                                    <div class="input-group-append" data-target="#datetimepicker2" data-toggle="datetimepicker">
+                                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <script type="text/javascript">
+                                        $(function () {
+                                            $('#datetimepicker1').datetimepicker()
+                                            $('#datetimepicker2').datetimepicker()
+                                        });
+                                    </script>
+                                </div>
                             </div>
-                            <div class = "col-md-2 float-right">
-                                <button type = "button" class="btn btn-outline-primary btn-sm mt-auto" id = "delete-all-btn">批量删除</button>
-                            </div>
-                        </div> 
+                            <script type="text/javascript">
+                                $(function () {
+                                    $('#datetimepicker1').datetimepicker();
+                                });
+                            </script>
+                    {% endif %}
+                        <div class="container">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="checkall" checked>
+                                                <label class="custom-control-label mt-1" for="checkall">全选</label>
+                                                <button type = "button" class="btn btn-outline-primary btn-sm mt-auto" id = "delete-all-btn">批量删除</button>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
                         <p class = "h1"></p>
                         <div class="col-md-12">
                             <div class="table-responsive">
@@ -83,7 +127,7 @@
                                 {% endfor %}
                                 <li class="page-item"><a class="page-link" href="../dashboard/?page={{ next }}">下一页</a></li>
                             </ul>
-                        </div>                        
+                        </div>
                 </div>
             </div>
         </section>
@@ -146,5 +190,9 @@
     <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="{% static "user/scripts/scripts.js" %}"></script>
     <script src="{% static "admin/scripts/dashboard.js" %}"></script>
+    <script src="{% static "user/scripts/moment-with-locales.min.js" %}"></script>
+    <script src="{% static "user/scripts/moment-timezone-with-data-2012-2022.min.js" %}"></script>
+    <script src="{% static "user/scripts/highlight.min.js" %}"></script>
+    <script src="{% static "user/scripts/tempusdominus-bootstrap-4.js" %}"></script>
     </body>
 </html>
