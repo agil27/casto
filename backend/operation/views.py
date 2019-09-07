@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage, InvalidPage
 from .models import Operation
 from .net.Detector import Detector
+from .net.GenderSwapper import Swapper
 import uuid
 import datetime
 import os
@@ -25,7 +26,7 @@ if not os.path.exists(UPLOAD_PATH):
 
 
 detector = Detector()
-
+swapper = Swapper()
 
 @login_required
 def upload(request):
@@ -87,9 +88,9 @@ def net(request, net_id):
         operation.processed_image_crop = crop_path
         operation.net = '0'
     else:
-        # TODO processed_path = net(raw_path)
-        processed_path = operation.raw_image  # TODO delete later
-        crop_path = ''
+        net_ = swapper
+        processed_path, crop_path = net_(operation.raw_image)
+        operation.processed_image_crop = crop_path
         operation.net = '1'
     operation.processed_image = processed_path
     operation.save()
