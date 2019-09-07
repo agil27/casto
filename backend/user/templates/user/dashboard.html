@@ -18,13 +18,13 @@
         <section id="container" class="container pb-0 mb-0">
             <div class="d-flex my-4">
                 <div class="row jumbotron w-100 py-5 mx-auto" style = "border: none; box-shadow: 2px 2px 3px #888888;">
-                    <div class = "col-lg-8">
+                    <div class = "col-lg-7">
                             <h1>上传图片</h1>
                             <p class = "lead"></p>
                             <p class="lead">
                                 上传图片进行头像截取 + 年龄、性别、表情标注，可选择性别转换滤镜。
                             </p>
-                            <form class="col-lg-8 form" role="form" autocomplete="off" id="formUpload" novalidate="">  
+                            <form class="col-lg-8 form" role="form" autocomplete="off" id="formUpload" novalidate="">
                                 <label class="col-form-label form-control-label text-muted" id = "file_desc">未选择任何文件</label>   
                                 <div class = "form-group row">                        
                                     <div class="input-group lg-6 mb-3">
@@ -54,11 +54,12 @@
                                     <label class="col-form-label form-control-label text-muted" style = "font-family: Source Hei Light">当前进度：100%</label>
                             </div>
                     </div> 
-                    <div class = "col-lg-3">
+                    <div class = "col-lg-4">
                             <h3>图像预览</h3>
                             <p class = "lead"></p>
                             <div class = "text-center card border-primary" style = "border: none; box-shadow: 2px 2px 3px #888888;">
-                                <img src = "{% static "user/img/Avatar.png" %}" class = "m-0 center-block img-rounded img-responsive" style = "width: 100%; height: 100%" id = "preview"/>
+                                <img src = "{% static "user/img/Avatar.png" %}" class = "m-0 center-block img-rounded img-responsive" style = "width: 50%; height: 50%" id = "preview"/>
+                                <img src = "{% static "user/img/Avatar.png" %}" class = "m-0 center-block img-rounded img-responsive" style = "width: 50%; height: 50%" id = "preview"/>
                             </div>
                             <p class = "lead-lg"></p>
                             <p class = "lead-lg" id = "status" style = "font-family: Source Hei">图像尚未上传，请先上传图片</p>
