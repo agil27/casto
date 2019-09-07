@@ -6,34 +6,64 @@ function GetQueryString(name) {
 }
 
 function setDetectBtn(op_id) {
-    $("#detect_btn").click(function() {
+    $("#detect_btn").click(function () {
         $("#status").text("正在进行图片转换，请稍候……")
         $("#function_block").hide()
-        $.post(
-            "../operation/0/net/",
-            {"id": op_id},
-            function(res) {
+        $.ajax({
+            type: "POST",
+            url: "../operation/0/net/",
+            data: {"id": op_id},
+            success: function (res) {
                 console.log(res.data)
                 $("#preview").attr("src", "../" + res.data)
                 $("#status").text("已完成转换，刷新页面可以查看操作记录")
             }
-        )
+        })
     })
 }
 
 function setGenderBtn(op_id) {
-    $("#gender_btn").click(function() {
+    $("#gender_btn").click(function () {
         $("#status").text("正在进行图片转换，请稍候……")
         $("#function_block").hide()
-        $.post(
-            "../operation/1/net/",
-            {"id": op_id},
-            function(res) {
+        $.ajax({
+            type: "POST",
+            url: "../operation/1/net/",
+        data: {"id": op_id},
+
+        success: function (res) {
+            console.log(res.data)
+            $("#preview").attr("src", "../" + res.data)
+            $("#status").text("已完成转换，刷新页面可以查看操作记录")
+        }
+    })
+    })
+}
+
+function setAllBtn(op_id) {
+    $("#all_btn").click(function () {
+        $("#status").text("正在进行图片转换，请稍候……")
+        $("#function_block").hide()
+        $.ajax({
+            type: "POST",
+            url: "../operation/0/net/",
+            data: {"id": op_id},
+            success: function (res) {
                 console.log(res.data)
                 $("#preview").attr("src", "../" + res.data)
                 $("#status").text("已完成转换，刷新页面可以查看操作记录")
             }
-        )
+        })
+        $.ajax({
+            type: "POST",
+            url: "../operation/1/net/",
+            data: {"id": op_id},
+            success: function (res) {
+                console.log(res.data)
+                $("#preview").attr("src", "../" + res.data)
+                $("#status").text("已完成转换，刷新页面可以查看操作记录")
+            }
+        })
     })
 }
 
@@ -77,6 +107,7 @@ $(document).ready(function () {
                     $("#function_block").show()
                     setDetectBtn(res.id)
                     setGenderBtn(res.id)
+                    setAllBtn(res.id)
                 }
                 else if (res.error) {
                     $("#file_desc").text("本地图片上传失败，请重新选择")
@@ -105,6 +136,7 @@ $(document).ready(function () {
                     $("#function_block").show()
                     setDetectBtn(res.id)
                     setGenderBtn(res.id)
+                    setAllBtn(res.id)
                 }
                 else if (res.error) {
                     $("#web_desc").text("网络图片上传失败，请换一张")
@@ -148,11 +180,11 @@ $(document).ready(function () {
         )
     })
 
-    $("#checkall").click(function() {
+    $("#checkall").click(function () {
         $(".checkbox").prop("checked", this.checked)
     })
 
-    $("#query-btn").click(function() {
+    $("#query-btn").click(function () {
         date1 = $("#date1").val()
         date2 = $("#date2").val()
         console.log(date1, date2)
@@ -168,4 +200,5 @@ $(document).ready(function () {
         $("#timequery").addClass("active")
         $("#allrecord").removeClass("active")
     }
+
 })
