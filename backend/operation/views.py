@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage, InvalidPage
 from .models import Operation
-from .net.CompactCNN_for_FER import CompactCNN #, Detector
+from .net.Detector import Detector
 import uuid
 import datetime
 import os
@@ -22,6 +22,9 @@ BRIEF_PATH = 'operation/images'
 
 if not os.path.exists(UPLOAD_PATH):
     os.makedirs(UPLOAD_PATH)
+
+
+detector = Detector()
 
 
 @login_required
@@ -77,21 +80,25 @@ def net(request, net_id):
     if operation.user_id != user_id:
         return JsonResponse({'error': 'not exists'})
     if net_id == 0:
-        # net_ = Detector()
-        net_ = CompactCNN()
+        net_ = detector
+        # net_ = FaceEmotionRecognition()
         # net_(operation.raw_image)
-        # processed_path, crop_path = net_(operation.raw_image)
-        # operation.processed_image_crop = crop_path
-        processed_path = net_(operation.raw_image)
+        processed_path, crop_path = net_(operation.raw_image)
+        operation.processed_image_crop = crop_path
         operation.net = '0'
     else:
         # TODO processed_path = net(raw_path)
         processed_path = operation.raw_image  # TODO delete later
+        crop_path = ''
         operation.net = '1'
     operation.processed_image = processed_path
-    shrink_path = processed_path[10:]  # rid the first 'operation/
     operation.save()
-    return JsonResponse({'data': shrink_path})
+    shrink_processed_path = processed_path[10:]  # rid the first 'operation/
+    shrink_crop_path = crop_path[10:]
+    return JsonResponse({
+        'processed': shrink_processed_path,
+        'cropped': shrink_crop_path
+    })
 
 
 @login_required

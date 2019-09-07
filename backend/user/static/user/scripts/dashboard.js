@@ -14,8 +14,12 @@ function setDetectBtn(op_id) {
             url: "../operation/0/net/",
             data: {"id": op_id},
             success: function (res) {
-                console.log(res.data)
-                $("#preview").attr("src", "../" + res.data)
+                console.log("processed", res.processed)
+                console.log("cropped", res.cropped)
+                $("#emotion").attr("src", "../" + res.processed)
+                if (res.cropped.length > 0) {
+                    $("#crop").attr("src", "../" + res.cropped)
+                }
                 $("#status").text("已完成转换，刷新页面可以查看操作记录")
             }
         })
@@ -29,14 +33,18 @@ function setGenderBtn(op_id) {
         $.ajax({
             type: "POST",
             url: "../operation/1/net/",
-        data: {"id": op_id},
+            data: {"id": op_id},
 
-        success: function (res) {
-            console.log(res.data)
-            $("#preview").attr("src", "../" + res.data)
-            $("#status").text("已完成转换，刷新页面可以查看操作记录")
-        }
-    })
+            success: function (res) {
+                console.log(res.processed)
+                console.log(res.cropped)
+                $("#gender").attr("src", "../" + res.processed)
+                if (res.cropped.length > 0) {
+                    $("#crop").attr("src", "../" + res.cropped)
+                }
+                $("#status").text("已完成转换，刷新页面可以查看操作记录")
+            }
+        })
     })
 }
 
@@ -49,8 +57,12 @@ function setAllBtn(op_id) {
             url: "../operation/0/net/",
             data: {"id": op_id},
             success: function (res) {
-                console.log(res.data)
-                $("#preview").attr("src", "../" + res.data)
+                console.log(res.processed)
+                console.log(res.cropped)
+                $("#emotion").attr("src", "../" + res.processed)
+                if (res.cropped.length > 0) {
+                    $("#crop").attr("src", "../" + res.cropped)
+                }
                 $("#status").text("已完成转换，刷新页面可以查看操作记录")
             }
         })
@@ -59,8 +71,12 @@ function setAllBtn(op_id) {
             url: "../operation/1/net/",
             data: {"id": op_id},
             success: function (res) {
-                console.log(res.data)
-                $("#preview").attr("src", "../" + res.data)
+                console.log(res.processed)
+                console.log(res.cropped)
+                $("#gender").attr("src", "../" + res.processed)
+                if (res.cropped.length > 0) {
+                    $("#crop").attr("src", "../" + res.cropped)
+                }
                 $("#status").text("已完成转换，刷新页面可以查看操作记录")
             }
         })
