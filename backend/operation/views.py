@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage, InvalidPage
 from .models import Operation
-from .net.CompactCNN_for_FER import CompactCNN, Detector
+from .net.CompactCNN_for_FER import CompactCNN #, Detector
 import uuid
 import datetime
 import os
@@ -78,8 +78,10 @@ def net(request, net_id):
         return JsonResponse({'error': 'not exists'})
     if net_id == 0:
         # net_ = Detector()
-        # net_(operation.raw_image)
         net_ = CompactCNN()
+        # net_(operation.raw_image)
+        # processed_path, crop_path = net_(operation.raw_image)
+        # operation.processed_image_crop = crop_path
         processed_path = net_(operation.raw_image)
         operation.net = '0'
     else:
@@ -259,6 +261,7 @@ def get_operation_info(operation):
         'time': operation.upload_time.strftime("%Y-%m-%d %H:%M"),
         'raw': operation.raw_image,
         'name': operation.raw_image_name,
+        'crop': operation.processed_image_crop,
         'processed': operation.processed_image,
         'type': operation.net
     }
