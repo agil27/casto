@@ -133,6 +133,8 @@ def query(request):
         end = request.POST.get('end', 9999999999)
         page = request.POST.get('page', 0)
     else: # GET
+        range_show = request.GET.get('range', 'no')
+        rangequery = True if range_show == 'yes' else False
         page = request.GET.get('page', 0)
         start = request.GET.get('start', 0)
         end = request.GET.get('end', 9999999999)
@@ -159,7 +161,8 @@ def query(request):
         'npage': list(range(1, paginator.num_pages + 1)),
         'cur': page,
         'prev': max(int(page) - 1, 1),
-        'next': min(int(page) + 1, paginator.num_pages)
+        'next': min(int(page) + 1, paginator.num_pages),
+        'rangequery': rangequery
     })
 
 

@@ -151,4 +151,14 @@ $(document).ready(function () {
     $("#checkall").click(function() {
         $(".checkbox").prop("checked", this.checked)
     })
+
+    $("#timequery").click(function() {
+        $(".active").removeClass("active")
+        $("#timequery").addClass("active")
+    })
+
+    $("#allrecord").click(function() {
+        $(".active").removeClass("active")
+        $("#allrecord").addClass("active")
+    })
 })
