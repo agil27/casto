@@ -7,6 +7,7 @@ from .net.CompactCNN_for_FER import CompactCNN
 import uuid
 import pytz
 import datetime
+import time
 import os
 import sys
 import urllib.request
@@ -136,10 +137,10 @@ def query(request):
         range_show = request.GET.get('range', 'no')
         rangequery = True if range_show == 'yes' else False
         page = request.GET.get('page', 0)
-        start = request.GET.get('start', 0)
-        end = request.GET.get('end', 9999999999)
-    start_time = datetime.datetime.fromtimestamp(start, tz=pytz.timezone('UTC'))
-    end_time = datetime.datetime.fromtimestamp(end, tz=pytz.timezone('UTC'))
+        start = request.GET.get('start', '01/01/1970 12:00 AM')
+        end = request.GET.get('end', '12/31/2100 12:00 PM')
+    start_time = datetime.datetime.strptime(start, '%m/%d/%Y %I:%M %p')
+    end_time = datetime.datetime.strptime(end, '%m/%d/%Y %I:%M %p')
     query_set = query_set \
         .filter(upload_time__gt=start_time) \
         .filter(upload_time__lt=end_time) \

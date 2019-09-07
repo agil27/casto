@@ -152,13 +152,20 @@ $(document).ready(function () {
         $(".checkbox").prop("checked", this.checked)
     })
 
-    $("#timequery").click(function() {
-        $(".active").removeClass("active")
-        $("#timequery").addClass("active")
+    $("#query-btn").click(function() {
+        date1 = $("#date1").val()
+        date2 = $("#date2").val()
+        console.log(date1, date2)
+        if (date1.length > 0 && date2.length > 0) {
+            href_path = "../dashboard/?range=yes"
+            href_time1 = "&start=" + date1
+            href_time2 = "&end=" + date2
+            window.location.replace(href_path + href_time1 + href_time2)
+        }
     })
 
-    $("#allrecord").click(function() {
-        $(".active").removeClass("active")
-        $("#allrecord").addClass("active")
-    })
+    if (GetQueryString("range") === "yes") {
+        $("#timequery").addClass("active")
+        $("#allrecord").removeClass("active")
+    }
 })
