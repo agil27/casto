@@ -1,16 +1,44 @@
 import torch
 from torchvision.transforms import ToTensor
-from operation.net.cnn import CNN
 import os
 from PIL import Image, ImageFont, ImageDraw
+import cv2
+import numpy as np
 import uuid
+from casto.settings import BASE_DIR
+from operation.net.cnn import CNN
 
 
 OUTPUT_PATH = 'operation/static/operation/images'
 FONT = 'user/static/user/style/font/Gothic.ttf'
+OPENCV_PATH = 'operation/static/opencv/haarcascades_frontalface_default.xml'
 
 if not os.path.exists(OUTPUT_PATH):
     os.makedirs(OUTPUT_PATH)
+
+
+'''
+class Detector:
+    def __init__(self):
+        # self.compactCNN = CompactCNN()
+        pass
+
+    def __call__(self, image_path):
+        raw_image = cv2.imread(image_path)
+        gray = cv2.cvtColor(raw_image, cv2.COLOR_BGR2GRAY)
+        path = os.path.join(BASE_DIR, OPENCV_PATH)
+        path = path.replace('/', os.sep)
+        print(r''.format(path))
+        face_cascade = cv2.CascadeClassifier(r''.format(path))
+        faces = face_cascade.detectMultiScale(
+            gray,
+            scaleFactor=1.15,
+            minNeighbors=3,
+            minSize=(5, 5)
+        )
+        for x, y, w, h in faces:
+            pass
+'''
 
 
 class CompactCNN:
