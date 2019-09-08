@@ -82,7 +82,10 @@ def net(request, net_id):
         return JsonResponse({'error': 'not exists'})
     if net_id == 0:
         net_ = detector
-        processed_path, crop_path = net_(operation.raw_image)
+        try:
+            processed_path, crop_path = net_(operation.raw_image)
+        except Exception:
+            return JsonResponse({'error': 'fail to trans'})
         new_op = Operation.objects.create(
             raw_image=operation.raw_image,
             crop=crop_path,
@@ -94,7 +97,10 @@ def net(request, net_id):
         type_ = 'emotion'
     else:
         net_ = swapper
-        processed_path, crop_path = net_(operation.raw_image)
+        try:
+            processed_path, crop_path = net_(operation.raw_image)
+        except Exception:
+            return JsonResponse({'error': 'fail to trans'})
         new_op = Operation.objects.create(
             raw_image=operation.raw_image,
             crop=crop_path,
@@ -159,7 +165,7 @@ def delete(request):
 @login_required
 def query(request):
     user_id = request.user.id
-    query_set = Operation.objects\
+    query_set = Operation.objects \
         .filter(user_id=user_id) \
         .filter(type__in=['0', '1'])
     range_show = request.GET.get('range', 'no')
@@ -215,8 +221,7 @@ def query_admin(request):
     if not user.admin:
         return JsonResponse({'error': 'permission denied'})
     user_id = request.user.id
-    query_set = Operation.objects\
-        .filter(user_id=user_id) \
+    query_set = Operation.objects \
         .filter(type__in=['0', '1'])
     range_show = request.GET.get('range', 'no')
     rangequery = True if range_show == 'yes' else False
@@ -315,9 +320,10 @@ def get_operation_info(operation):
         type_ = '1'
     else:
         type_ = ''
+    time = operation.upload_time + datetime.timedelta(hours=8)
     return {
         'id': operation.id,
-        'time': operation.upload_time.strftime("%Y-%m-%d %H:%M"),
+        'time': time.strftime("%Y-%m-%d %H:%M"),
         'raw': operation.raw_image,
         'name': operation.raw_image_name,
         'crop': operation.crop,
