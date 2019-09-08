@@ -33,7 +33,7 @@ class Swapper(object):
     def __init__(self):
         self.config = Config()
         self.net = G(self.config.in_channel, self.config.out_channel)
-        self.net.load_state_dict(torch.load('operation/net/checkpoints/ga2b.pth', map_location = 'cpu'))
+        self.net.load_state_dict(torch.load('operation/net/checkpoints/gb2a.pth', map_location = 'cpu'))
         transforms_ = [ 
             transforms.ToTensor(),
             transforms.Normalize((0.5,0.5,0.5), (0.5,0.5,0.5)) 

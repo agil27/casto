@@ -14,9 +14,9 @@ function setDetectBtn(op_id) {
             url: "../operation/0/net/",
             data: {"id": op_id},
             success: function (res) {
-                console.log("processed", res.processed)
+                console.log("emotion", res.emotion)
                 console.log("cropped", res.cropped)
-                $("#emotion").attr("src", "../" + res.processed)
+                $("#emotion").attr("src", "../" + res.emotion)
                 if (res.cropped.length > 0) {
                     $("#crop").attr("src", "../" + res.cropped)
                 }
@@ -36,9 +36,9 @@ function setGenderBtn(op_id) {
             data: {"id": op_id},
 
             success: function (res) {
-                console.log(res.processed)
+                console.log(res.gender)
                 console.log(res.cropped)
-                $("#gender").attr("src", "../" + res.processed)
+                $("#gender").attr("src", "../" + res.gender)
                 if (res.cropped.length > 0) {
                     $("#crop").attr("src", "../" + res.cropped)
                 }
@@ -57,9 +57,10 @@ function setAllBtn(op_id) {
             url: "../operation/0/net/",
             data: {"id": op_id},
             success: function (res) {
-                console.log(res.processed)
+                console.log(res)
+                console.log(res.emotion)
                 console.log(res.cropped)
-                $("#emotion").attr("src", "../" + res.processed)
+                $("#emotion").attr("src", "../" + res.emotion)
                 if (res.cropped.length > 0) {
                     $("#crop").attr("src", "../" + res.cropped)
                 }
@@ -71,9 +72,9 @@ function setAllBtn(op_id) {
             url: "../operation/1/net/",
             data: {"id": op_id},
             success: function (res) {
-                console.log(res.processed)
+                console.log(res.gender)
                 console.log(res.cropped)
-                $("#gender").attr("src", "../" + res.processed)
+                $("#gender").attr("src", "../" + res.gender)
                 if (res.cropped.length > 0) {
                     $("#crop").attr("src", "../" + res.cropped)
                 }

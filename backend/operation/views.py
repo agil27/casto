@@ -82,22 +82,21 @@ def net(request, net_id):
         return JsonResponse({'error': 'not exists'})
     if net_id == 0:
         net_ = detector
-        # net_ = FaceEmotionRecognition()
-        # net_(operation.raw_image)
         processed_path, crop_path = net_(operation.raw_image)
-        operation.processed_image_crop = crop_path
-        operation.net = '0'
+        operation.crop = crop_path
+        operation.emotion = processed_path
+        type_ = 'emotion'
     else:
         net_ = swapper
         processed_path, crop_path = net_(operation.raw_image)
-        operation.processed_image_crop = crop_path
-        operation.net = '1'
-    operation.processed_image = processed_path
+        operation.crop = crop_path
+        operation.gender = processed_path
+        type_ = 'gender'
     operation.save()
     shrink_processed_path = processed_path[10:]  # rid the first 'operation/
     shrink_crop_path = crop_path[10:]
     return JsonResponse({
-        'processed': shrink_processed_path,
+        type_: shrink_processed_path,
         'cropped': shrink_crop_path
     })
 
@@ -120,9 +119,19 @@ def delete(request):
                 os.remove(raw)
             except FileNotFoundError:
                 pass
-            processed = operation.processed_image
+            crop = operation.crop
             try:
-                os.remove(processed)
+                os.remove(crop)
+            except FileNotFoundError:
+                pass
+            emotion = operation.emotion
+            try:
+                os.remove(emotion)
+            except FileNotFoundError:
+                pass
+            gender = operation.gender
+            try:
+                os.remove(gender)
             except FileNotFoundError:
                 pass
             operation.delete()
@@ -136,8 +145,7 @@ def delete(request):
 @login_required
 def query(request):
     user_id = request.user.id
-    query_set = Operation.objects.filter(user_id=user_id)  # \
-    # .filter(processed_image__in=['0', '1'])
+    query_set = Operation.objects.filter(user_id=user_id)
     range_show = request.GET.get('range', 'no')
     rangequery = True if range_show == 'yes' else False
     page = request.GET.get('page', 0)
@@ -173,8 +181,9 @@ def query(request):
 
 
 @login_required
-def get(request, operation_id):
+def get(request):
     user_id = request.user.id
+    operation_id = request.GET.get('id', -1)
     try:
         operation = Operation.objects.get(id=operation_id)
     except KeyError:
@@ -190,8 +199,7 @@ def query_admin(request):
     if not user.admin:
         return JsonResponse({'error': 'permission denied'})
     user_id = request.user.id
-    query_set = Operation.objects.filter(user_id=user_id)  # \
-    # .filter(processed_image__in=['0', '1'])
+    query_set = Operation.objects.filter(user_id=user_id)
     range_show = request.GET.get('range', 'no')
     rangequery = True if range_show == 'yes' else False
     page = request.GET.get('page', 0)
@@ -241,9 +249,19 @@ def delete_admin(request):
             os.remove(raw)
         except FileNotFoundError:
             pass
-        processed = operation.processed_image
+        crop = operation.crop
         try:
-            os.remove(processed)
+            os.remove(crop)
+        except FileNotFoundError:
+            pass
+        emotion = operation.emotion
+        try:
+            os.remove(emotion)
+        except FileNotFoundError:
+            pass
+        gender = operation.gender
+        try:
+            os.remove(gender)
         except FileNotFoundError:
             pass
         operation.delete()
@@ -255,14 +273,27 @@ def delete_admin(request):
 
 
 def get_operation_info(operation):
+    e = operation.emotion
+    g = operation.gender
+    print(e)
+    print(g)
+    if e and g:
+        type_ = '2'
+    elif e:
+        type_ = '0'
+    elif g:
+        type_ = '1'
+    else:
+        type_ = ''
     return {
         'id': operation.id,
         'time': operation.upload_time.strftime("%Y-%m-%d %H:%M"),
         'raw': operation.raw_image,
         'name': operation.raw_image_name,
-        'crop': operation.processed_image_crop,
-        'processed': operation.processed_image,
-        'type': operation.net
+        'crop': operation.crop,
+        'emotion': e,
+        'gender': g,
+        'type': type_
     }
 
 
