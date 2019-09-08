@@ -33,7 +33,7 @@ class Swapper(object):
     def __init__(self):
         self.config = Config()
         self.net = G(self.config.in_channel, self.config.out_channel)
-        self.net.load_state_dict(torch.load('operation/net/checkpoints/ga2b.pth', map_location = 'cpu'))
+        self.net.load_state_dict(torch.load('operation/net/checkpoints/gb2a.pth', map_location = 'cpu'))
         transforms_ = [ 
             transforms.ToTensor(),
             transforms.Normalize((0.5,0.5,0.5), (0.5,0.5,0.5)) 
@@ -41,7 +41,7 @@ class Swapper(object):
         self.trans = transforms.Compose(transforms_)
 
     def __call__(self, image_path):
-        img = Image.open(image_path).resize((256, 256))
+        img = Image.open(image_path)
         crop, box, crop_path = crop_image(img)
         '''
         inputfile = self.trans(crop).unsqueeze(dim = 0)
