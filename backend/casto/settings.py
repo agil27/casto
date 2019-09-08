@@ -33,10 +33,6 @@ ALLOWED_HOSTS = ["166.111.80.49", "127.0.0.1", "183.172.120.224", "183.172.186.7
 
 AUTH_USER_MODEL = 'user.User'
 
-USER_L10N = False
-
-DATETIME_FORMAT = 'Y-m-d H:i:s'
-
 # Application definition
 
 INSTALLED_APPS = [

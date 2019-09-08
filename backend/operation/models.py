@@ -4,9 +4,10 @@ from django.db import models
 class Operation(models.Model):
     raw_image = models.CharField(max_length=128)
     raw_image_name = models.CharField(max_length=128, default='image.jpg')
-    processed_image_crop = models.CharField(max_length=128, default='')
-    processed_image = models.CharField(max_length=128, default='')
-    net = models.CharField(max_length=1, default='')
+    crop = models.CharField(max_length=128, default='')
+    gender = models.CharField(max_length=128, default='')
+    emotion = models.CharField(max_length=128, default='')
+    type = models.CharField(max_length=128, default='')
     upload_time = models.DateTimeField(auto_now_add=True)
     user_id = models.IntegerField(null=True)
 

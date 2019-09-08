@@ -24,9 +24,9 @@ BRIEF_PATH = 'operation/images'
 if not os.path.exists(UPLOAD_PATH):
     os.makedirs(UPLOAD_PATH)
 
-
 detector = Detector()
 swapper = Swapper()
+
 
 @login_required
 def upload(request):
@@ -82,22 +82,38 @@ def net(request, net_id):
         return JsonResponse({'error': 'not exists'})
     if net_id == 0:
         net_ = detector
-        # net_ = FaceEmotionRecognition()
-        # net_(operation.raw_image)
-        processed_path, crop_path = net_(operation.raw_image)
-        operation.processed_image_crop = crop_path
-        operation.net = '0'
+        try:
+            processed_path, crop_path = net_(operation.raw_image)
+        except Exception:
+            return JsonResponse({'error': 'fail to trans'})
+        new_op = Operation.objects.create(
+            raw_image=operation.raw_image,
+            crop=crop_path,
+            emotion=processed_path,
+            type='0',
+            user_id=user_id
+        )
+        new_op.save()
+        type_ = 'emotion'
     else:
         net_ = swapper
-        processed_path, crop_path = net_(operation.raw_image)
-        operation.processed_image_crop = crop_path
-        operation.net = '1'
-    operation.processed_image = processed_path
-    operation.save()
+        try:
+            processed_path, crop_path = net_(operation.raw_image)
+        except Exception:
+            return JsonResponse({'error': 'fail to trans'})
+        new_op = Operation.objects.create(
+            raw_image=operation.raw_image,
+            crop=crop_path,
+            gender=processed_path,
+            type='1',
+            user_id=user_id
+        )
+        new_op.save()
+        type_ = 'gender'
     shrink_processed_path = processed_path[10:]  # rid the first 'operation/
     shrink_crop_path = crop_path[10:]
     return JsonResponse({
-        'processed': shrink_processed_path,
+        type_: shrink_processed_path,
         'cropped': shrink_crop_path
     })
 
@@ -107,7 +123,6 @@ def delete(request):
     user_id = request.user.id
 
     def delete_operation(operation_id):
-        print(operation_id)
         try:
             operation = Operation.objects.get(id=operation_id)
         except KeyError:
@@ -116,17 +131,31 @@ def delete(request):
             return False
         else:
             raw = operation.raw_image
-            try:
-                os.remove(raw)
-            except FileNotFoundError:
-                pass
-            processed = operation.processed_image
-            try:
-                os.remove(processed)
-            except FileNotFoundError:
-                pass
-            operation.delete()
-            return True
+            if len(Operation.objects.filter(raw_image=raw)) == 1:
+                try:
+                    os.remove(raw)
+                except FileNotFoundError:
+                    pass
+                crop = operation.crop
+                try:
+                    os.remove(crop)
+                except FileNotFoundError:
+                    pass
+                emotion = operation.emotion
+                try:
+                    os.remove(emotion)
+                except FileNotFoundError:
+                    pass
+                gender = operation.gender
+                try:
+                    os.remove(gender)
+                except FileNotFoundError:
+                    pass
+                operation.delete()
+                return True
+            else:
+                operation.delete()
+                return False
 
     ids = request.POST.getlist('ids[]', [])
     res = [{'id': id_, 'state': delete_operation(id_)} for id_ in ids]
@@ -136,18 +165,14 @@ def delete(request):
 @login_required
 def query(request):
     user_id = request.user.id
-    query_set = Operation.objects.filter(user_id=user_id)  # \
-    # .filter(processed_image__in=['0', '1'])
-    if request.method == 'POST':
-        start = request.POST.get('start', 0)
-        end = request.POST.get('end', 9999999999)
-        page = request.POST.get('page', 0)
-    else: # GET
-        range_show = request.GET.get('range', 'no')
-        rangequery = True if range_show == 'yes' else False
-        page = request.GET.get('page', 0)
-        start = request.GET.get('start', '01/01/1970 12:00 AM')
-        end = request.GET.get('end', '12/31/2100 12:00 PM')
+    query_set = Operation.objects \
+        .filter(user_id=user_id) \
+        .filter(type__in=['0', '1'])
+    range_show = request.GET.get('range', 'no')
+    rangequery = True if range_show == 'yes' else False
+    page = request.GET.get('page', 0)
+    start = request.GET.get('start', '01/01/1970 12:00 AM')
+    end = request.GET.get('end', '12/31/2100 12:00 PM')
     start_time = datetime.datetime.strptime(start, '%m/%d/%Y %I:%M %p')
     end_time = datetime.datetime.strptime(end, '%m/%d/%Y %I:%M %p')
     query_set = query_set \
@@ -172,13 +197,15 @@ def query(request):
         'cur': page,
         'prev': max(int(page) - 1, 1),
         'next': min(int(page) + 1, paginator.num_pages),
-        'rangequery': rangequery
+        'rangequery': rangequery,
+        'is_admin': request.user.admin
     })
 
 
 @login_required
-def get(request, operation_id):
+def get(request):
     user_id = request.user.id
+    operation_id = request.GET.get('id', -1)
     try:
         operation = Operation.objects.get(id=operation_id)
     except KeyError:
@@ -193,19 +220,13 @@ def query_admin(request):
     user = request.user
     if not user.admin:
         return JsonResponse({'error': 'permission denied'})
-    user_id = request.user.id
-    query_set = Operation.objects.filter(user_id=user_id)  # \
-    # .filter(processed_image__in=['0', '1'])
-    if request.method == 'POST':
-        start = request.POST.get('start', 0)
-        end = request.POST.get('end', 9999999999)
-        page = request.POST.get('page', 0)
-    else:  # GET
-        range_show = request.GET.get('range', 'no')
-        rangequery = True if range_show == 'yes' else False
-        page = request.GET.get('page', 0)
-        start = request.GET.get('start', '01/01/1970 12:00 AM')
-        end = request.GET.get('end', '12/31/2100 12:00 PM')
+    query_set = Operation.objects \
+        .filter(type__in=['0', '1'])
+    range_show = request.GET.get('range', 'no')
+    rangequery = True if range_show == 'yes' else False
+    page = request.GET.get('page', 0)
+    start = request.GET.get('start', '01/01/1970 12:00 AM')
+    end = request.GET.get('end', '12/31/2100 12:00 PM')
     start_time = datetime.datetime.strptime(start, '%m/%d/%Y %I:%M %p')
     end_time = datetime.datetime.strptime(end, '%m/%d/%Y %I:%M %p')
     query_set = query_set \
@@ -235,6 +256,16 @@ def query_admin(request):
 
 
 @login_required
+def get_admin(request):
+    operation_id = request.GET.get('id', -1)
+    try:
+        operation = Operation.objects.get(id=operation_id)
+    except KeyError:
+        return JsonResponse({'error': 'not exists'})
+    return JsonResponse(get_operation_info_admin(operation))
+
+
+@login_required
 def delete_admin(request):
     user = request.user
     if not user.admin:
@@ -246,17 +277,31 @@ def delete_admin(request):
         except KeyError:
             return False
         raw = operation.raw_image
-        try:
-            os.remove(raw)
-        except FileNotFoundError:
-            pass
-        processed = operation.processed_image
-        try:
-            os.remove(processed)
-        except FileNotFoundError:
-            pass
-        operation.delete()
-        return True
+        if len(Operation.objects.filter(raw_image=raw)) == 1:
+            try:
+                os.remove(raw)
+            except FileNotFoundError:
+                pass
+            crop = operation.crop
+            try:
+                os.remove(crop)
+            except FileNotFoundError:
+                pass
+            emotion = operation.emotion
+            try:
+                os.remove(emotion)
+            except FileNotFoundError:
+                pass
+            gender = operation.gender
+            try:
+                os.remove(gender)
+            except FileNotFoundError:
+                pass
+            operation.delete()
+            return True
+        else:
+            operation.delete()
+            return False
 
     ids = request.POST.getlist('ids[]', [])
     res = [{'id': id_, 'state': delete_operation(id_)} for id_ in ids]
@@ -264,24 +309,27 @@ def delete_admin(request):
 
 
 def get_operation_info(operation):
+    e = operation.emotion
+    g = operation.gender
+    if e and g:
+        type_ = '2'
+    elif e:
+        type_ = '0'
+    elif g:
+        type_ = '1'
+    else:
+        type_ = ''
+    time = operation.upload_time + datetime.timedelta(hours=8)
     return {
         'id': operation.id,
-        'time': operation.upload_time.strftime("%Y-%m-%d %H:%M"),
+        'time': time.strftime("%Y-%m-%d %H:%M"),
         'raw': operation.raw_image,
         'name': operation.raw_image_name,
-        'crop': operation.processed_image_crop,
-        'processed': operation.processed_image,
-        'type': operation.net
+        'crop': operation.crop,
+        'emotion': e,
+        'gender': g,
+        'type': type_
     }
-
-
-def read_image_from(path):
-    try:
-        with open(path, 'rb') as f:
-            data = f.read()
-    except IOError:
-        return None
-    return data
 
 
 def get_operation_info_admin(operation):

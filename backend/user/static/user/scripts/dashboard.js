@@ -14,13 +14,18 @@ function setDetectBtn(op_id) {
             url: "../operation/0/net/",
             data: {"id": op_id},
             success: function (res) {
-                console.log("processed", res.processed)
+                console.log("emotion", res.emotion)
                 console.log("cropped", res.cropped)
-                $("#emotion").attr("src", "../" + res.processed)
-                if (res.cropped.length > 0) {
-                    $("#crop").attr("src", "../" + res.cropped)
+                if (res.error === undefined) {
+                    $("#emotion").attr("src", "../" + res.emotion)
+                    if (res.cropped.length > 0) {
+                        $("#crop").attr("src", "../" + res.cropped)
+                    }
+                    $("#status").text("已完成转换，刷新页面可以查看操作记录")
                 }
-                $("#status").text("已完成转换，刷新页面可以查看操作记录")
+                else {
+                    $("#status").text("转换失败，请尝试使用其他图片")
+                }
             }
         })
     })
@@ -36,13 +41,18 @@ function setGenderBtn(op_id) {
             data: {"id": op_id},
 
             success: function (res) {
-                console.log(res.processed)
+                console.log(res.gender)
                 console.log(res.cropped)
-                $("#gender").attr("src", "../" + res.processed)
-                if (res.cropped.length > 0) {
-                    $("#crop").attr("src", "../" + res.cropped)
+                if (res.error === undefined) {
+                    $("#gender").attr("src", "../" + res.gender)
+                    if (res.cropped.length > 0) {
+                        $("#crop").attr("src", "../" + res.cropped)
+                    }
+                    $("#status").text("已完成转换，刷新页面可以查看操作记录")
                 }
-                $("#status").text("已完成转换，刷新页面可以查看操作记录")
+                else {
+                    $("#status").text("转换失败，请尝试使用其他图片")
+                }
             }
         })
     })
@@ -57,13 +67,19 @@ function setAllBtn(op_id) {
             url: "../operation/0/net/",
             data: {"id": op_id},
             success: function (res) {
-                console.log(res.processed)
+                console.log(res)
+                console.log(res.emotion)
                 console.log(res.cropped)
-                $("#emotion").attr("src", "../" + res.processed)
-                if (res.cropped.length > 0) {
-                    $("#crop").attr("src", "../" + res.cropped)
+                if (res.error === undefined) {
+                    $("#emotion").attr("src", "../" + res.emotion)
+                    if (res.cropped.length > 0) {
+                        $("#crop").attr("src", "../" + res.cropped)
+                    }
+                    $("#status").text("已完成转换，刷新页面可以查看操作记录")
                 }
-                $("#status").text("已完成转换，刷新页面可以查看操作记录")
+                else {
+                    $("#status").text("转换失败，请尝试使用其他图片")
+                }
             }
         })
         $.ajax({
@@ -71,13 +87,18 @@ function setAllBtn(op_id) {
             url: "../operation/1/net/",
             data: {"id": op_id},
             success: function (res) {
-                console.log(res.processed)
+                console.log(res.gender)
                 console.log(res.cropped)
-                $("#gender").attr("src", "../" + res.processed)
-                if (res.cropped.length > 0) {
-                    $("#crop").attr("src", "../" + res.cropped)
+                if (res.error === undefined) {
+                    $("#gender").attr("src", "../" + res.gender)
+                    if (res.cropped.length > 0) {
+                        $("#crop").attr("src", "../" + res.cropped)
+                    }
+                    $("#status").text("已完成转换，刷新页面可以查看操作记录")
                 }
-                $("#status").text("已完成转换，刷新页面可以查看操作记录")
+                else {
+                    $("#status").text("转换失败，请尝试使用其他图片")
+                }
             }
         })
     })
