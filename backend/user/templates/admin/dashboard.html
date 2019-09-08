@@ -96,6 +96,37 @@
                                                 <th class="w-30"></th>
                                             </tr>
                                             {% for item in list %}
+                                            {% for item in list %}
+                                            <div class="modal fade" id="myModal{{ item.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class = "float-left">查看结果</h4>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class = "row">
+                                                                <div class = "text-center card border-primary mr-3 col-lg-5" style = "border: none; box-shadow: 2px 2px 3px #888888;">
+                                                                    <img src = "../{{ item.raw_for_modal }}" class = "m-0 center-block img-rounded img-responsive" style = "width: 100%; height: 100%" id = "emotion"/>
+                                                                </div>
+                                                                {% if item.type == '0' %}
+                                                                <div class = "text-center card border-primary mr-3 col-lg-5" style = "border: none; box-shadow: 2px 2px 3px #888888;">
+                                                                    <img src = "../{{ item.emotion_for_modal }}" class = "m-0 center-block img-rounded img-responsive" style = "width: 100%; height: 100%" id = "emotion"/>
+                                                                </div>
+                                                                {% endif %}
+                                                                {% if item.type == '1' %}
+                                                                <div class = "text-center card border-primary col-lg-5" style = "border: none; box-shadow: 2px 2px 3px #888888;">
+                                                                    <img src = "../{{ item.gender_for_modal }}" class = "m-0 center-block img-rounded img-responsive" style = "width: 100%; height: 100%" id = "gender"/>
+                                                                </div>
+                                                                {% endif %}
+                                                            </div>                                                           
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+                                                        </div>
+                                                    </div><!-- /.modal-content -->
+                                                </div><!-- /.modal -->
+                                            </div>
                                             <tr>
                                                 <td><div class="custom-control custom-checkbox">
                                                     <input type="checkbox" class="custom-control-input checkbox" id="customCheck{{ item.id }}" checked>
@@ -111,7 +142,7 @@
                                                 </td>
                                                 <td>{{ item.username }}</td>
                                                 <td>{{ item.time }}</td>
-                                                <td><button type = "button" class="btn btn-dark border-white mt-auto" id = "see-result">查看结果</button></td>
+                                                <td><button type = "button" class="btn btn-dark border-white mt-auto" data-toggle="modal" data-target="#myModal{{ item.id }}" id = "see-result">查看结果</button></td>                                               
                                                 <td><button type = "button" class="btn btn-danger border-white mt-auto delete-btn" id = "{{ item.id }}">删除记录</button></td>
                                             </tr>
                                             {% endfor %}

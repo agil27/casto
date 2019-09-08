@@ -328,6 +328,9 @@ def get_operation_info(operation):
         'crop': operation.crop,
         'emotion': e,
         'gender': g,
+        'raw_for_modal': operation.raw_image[10:],
+        'emotion_for_modal': e[10:],
+        'gender_for_modal': g[10:],
         'type': type_
     }
 

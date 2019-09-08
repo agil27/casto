@@ -22,7 +22,7 @@ def crop_image(image):
     pt1 = tuple(boxes[0][:2])
     pt2 = tuple(boxes[0][2:4])
     cropped = image.crop(pt1 + pt2)
-    print('box', boxes, pt1 + pt2)
+    #print('box', boxes, pt1 + pt2)
     cropped_name = generate_name()
     cropped_path = os.path.join(OUTPUT_PATH, cropped_name)
     cropped.save(cropped_path)
@@ -45,7 +45,7 @@ class Detector:
     def __call__(self, image_path):
         raw_image = Image.open(image_path)
         cropped_path = crop_image(raw_image)
-        # recognition_path = ''
+        recognition_path = ''
         recognition_path = self._recognition(raw_image)
         return recognition_path, cropped_path
 
@@ -61,7 +61,7 @@ class Detector:
 class FaceEmotionRecognition:
     def __init__(self):
         self.net = CNN()
-        checkpoint = torch.load('operation/static/models/CompactCNN_for_FER.t7')
+        checkpoint = torch.load('operation/static/models/CompactCNN_for_FER.t7', map_location='cpu')
         self.net.load_state_dict(checkpoint['net'])
         self.net.eval()
 
