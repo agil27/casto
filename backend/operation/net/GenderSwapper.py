@@ -39,7 +39,7 @@ class Swapper(object):
         self.net['a2b'] = G(self.config.in_channel, self.config.out_channel)
         self.net['a2b'].load_state_dict(torch.load('operation/net/checkpoints/ga2b.pth', map_location='cpu'))
         self.net['b2a'] = G(self.config.in_channel, self.config.out_channel)
-        self.net['b2a'].load_state_dict(torch.load('operation/net/checkpoints/gb2a.pth', map_location='cpu')) 
+        self.net['b2a'].load_state_dict(torch.load('operation/net/checkpoints/gb2a.pth', map_location='cpu'))
 
         transforms_ = [
             transforms.ToTensor(),
@@ -63,7 +63,6 @@ class Swapper(object):
         img[box[1]:box[3], box[0]:box[2]] = outcrop
         img = Image.fromarray(np.uint8(img))
         '''
-        print(self.net[gender_model_name])
         img = self.trans(img).unsqueeze(dim=0)
         img = topil()(to_image(self.net[gender_model_name](img).data.squeeze()))
 

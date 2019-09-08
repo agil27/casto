@@ -45,7 +45,6 @@ class Detector:
     def __call__(self, image_path):
         raw_image = Image.open(image_path)
         cropped_path = crop_image(raw_image)
-        recognition_path = ''
         recognition_path = self._recognition(raw_image)
         return recognition_path, cropped_path
 

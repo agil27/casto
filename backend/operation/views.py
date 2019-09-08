@@ -171,7 +171,7 @@ def query(request):
         .filter(type__in=['0', '1'])
     range_show = request.GET.get('range', 'no')
     rangequery = True if range_show == 'yes' else False
-    page = request.GET.get('page', 0)
+    page = request.GET.get('page', 1)
     start = request.GET.get('start', '01/01/1970 12:00 AM')
     end = request.GET.get('end', '12/31/2100 12:00 PM')
     start_time = datetime.datetime.strptime(start, '%m/%d/%Y %I:%M %p')
@@ -225,7 +225,7 @@ def query_admin(request):
         .filter(type__in=['0', '1'])
     range_show = request.GET.get('range', 'no')
     rangequery = True if range_show == 'yes' else False
-    page = request.GET.get('page', 0)
+    page = request.GET.get('page', 1)
     start = request.GET.get('start', '01/01/1970 12:00 AM')
     end = request.GET.get('end', '12/31/2100 12:00 PM')
     start_time = datetime.datetime.strptime(start, '%m/%d/%Y %I:%M %p')
