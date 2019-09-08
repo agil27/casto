@@ -138,16 +138,11 @@ def query(request):
     user_id = request.user.id
     query_set = Operation.objects.filter(user_id=user_id)  # \
     # .filter(processed_image__in=['0', '1'])
-    if request.method == 'POST':
-        start = request.POST.get('start', 0)
-        end = request.POST.get('end', 9999999999)
-        page = request.POST.get('page', 0)
-    else: # GET
-        range_show = request.GET.get('range', 'no')
-        rangequery = True if range_show == 'yes' else False
-        page = request.GET.get('page', 0)
-        start = request.GET.get('start', '01/01/1970 12:00 AM')
-        end = request.GET.get('end', '12/31/2100 12:00 PM')
+    range_show = request.GET.get('range', 'no')
+    rangequery = True if range_show == 'yes' else False
+    page = request.GET.get('page', 0)
+    start = request.GET.get('start', '01/01/1970 12:00 AM')
+    end = request.GET.get('end', '12/31/2100 12:00 PM')
     start_time = datetime.datetime.strptime(start, '%m/%d/%Y %I:%M %p')
     end_time = datetime.datetime.strptime(end, '%m/%d/%Y %I:%M %p')
     query_set = query_set \
@@ -172,7 +167,8 @@ def query(request):
         'cur': page,
         'prev': max(int(page) - 1, 1),
         'next': min(int(page) + 1, paginator.num_pages),
-        'rangequery': rangequery
+        'rangequery': rangequery,
+        'is_admin': request.user.admin
     })
 
 
@@ -196,16 +192,11 @@ def query_admin(request):
     user_id = request.user.id
     query_set = Operation.objects.filter(user_id=user_id)  # \
     # .filter(processed_image__in=['0', '1'])
-    if request.method == 'POST':
-        start = request.POST.get('start', 0)
-        end = request.POST.get('end', 9999999999)
-        page = request.POST.get('page', 0)
-    else:  # GET
-        range_show = request.GET.get('range', 'no')
-        rangequery = True if range_show == 'yes' else False
-        page = request.GET.get('page', 0)
-        start = request.GET.get('start', '01/01/1970 12:00 AM')
-        end = request.GET.get('end', '12/31/2100 12:00 PM')
+    range_show = request.GET.get('range', 'no')
+    rangequery = True if range_show == 'yes' else False
+    page = request.GET.get('page', 0)
+    start = request.GET.get('start', '01/01/1970 12:00 AM')
+    end = request.GET.get('end', '12/31/2100 12:00 PM')
     start_time = datetime.datetime.strptime(start, '%m/%d/%Y %I:%M %p')
     end_time = datetime.datetime.strptime(end, '%m/%d/%Y %I:%M %p')
     query_set = query_set \
