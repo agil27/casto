@@ -31,14 +31,14 @@ function setDetectBtn(op_id) {
     })
 }
 
-function setGenderBtn(op_id) {
-    $("#gender_btn").click(function () {
+function setGenderBoyBtn(op_id) {
+    $("#gender_boy_btn").click(function () {
         $("#status").text("正在进行图片转换，请稍候……")
         $("#function_block").hide()
         $.ajax({
             type: "POST",
             url: "../operation/1/net/",
-            data: {"id": op_id},
+            data: {"id": op_id, "gender": "b2a"},
 
             success: function (res) {
                 console.log(res.gender)
@@ -58,8 +58,35 @@ function setGenderBtn(op_id) {
     })
 }
 
-function setAllBtn(op_id) {
-    $("#all_btn").click(function () {
+function setGenderGirlBtn(op_id) {
+    $("#gender_girl_btn").click(function () {
+        $("#status").text("正在进行图片转换，请稍候……")
+        $("#function_block").hide()
+        $.ajax({
+            type: "POST",
+            url: "../operation/1/net/",
+            data: {"id": op_id, "gender": "a2b"},
+
+            success: function (res) {
+                console.log(res.gender)
+                console.log(res.cropped)
+                if (res.error === undefined) {
+                    $("#gender").attr("src", "../" + res.gender)
+                    if (res.cropped.length > 0) {
+                        $("#crop").attr("src", "../" + res.cropped)
+                    }
+                    $("#status").text("已完成转换，刷新页面可以查看操作记录")
+                }
+                else {
+                    $("#status").text("转换失败，请尝试使用其他图片")
+                }
+            }
+        })
+    })
+}
+
+function setAllBoyBtn(op_id) {
+    $("#all_boy_btn").click(function () {
         $("#status").text("正在进行图片转换，请稍候……")
         $("#function_block").hide()
         $.ajax({
@@ -85,7 +112,53 @@ function setAllBtn(op_id) {
         $.ajax({
             type: "POST",
             url: "../operation/1/net/",
+            data: {"id": op_id, "gender": "b2a"},
+            success: function (res) {
+                console.log(res.gender)
+                console.log(res.cropped)
+                if (res.error === undefined) {
+                    $("#gender").attr("src", "../" + res.gender)
+                    if (res.cropped.length > 0) {
+                        $("#crop").attr("src", "../" + res.cropped)
+                    }
+                    $("#status").text("已完成转换，刷新页面可以查看操作记录")
+                }
+                else {
+                    $("#status").text("转换失败，请尝试使用其他图片")
+                }
+            }
+        })
+    })
+}
+
+function setAllGirlBtn(op_id) {
+    $("#all_girl_btn").click(function () {
+        $("#status").text("正在进行图片转换，请稍候……")
+        $("#function_block").hide()
+        $.ajax({
+            type: "POST",
+            url: "../operation/0/net/",
             data: {"id": op_id},
+            success: function (res) {
+                console.log(res)
+                console.log(res.emotion)
+                console.log(res.cropped)
+                if (res.error === undefined) {
+                    $("#emotion").attr("src", "../" + res.emotion)
+                    if (res.cropped.length > 0) {
+                        $("#crop").attr("src", "../" + res.cropped)
+                    }
+                    $("#status").text("已完成转换，刷新页面可以查看操作记录")
+                }
+                else {
+                    $("#status").text("转换失败，请尝试使用其他图片")
+                }
+            }
+        })
+        $.ajax({
+            type: "POST",
+            url: "../operation/1/net/",
+            data: {"id": op_id, "gender": "a2b"},
             success: function (res) {
                 console.log(res.gender)
                 console.log(res.cropped)
@@ -143,8 +216,10 @@ $(document).ready(function () {
                     $("#status").text("图片已经上传，请选择您的服务")
                     $("#function_block").show()
                     setDetectBtn(res.id)
-                    setGenderBtn(res.id)
-                    setAllBtn(res.id)
+                    setGenderBoyBtn(res.id)
+                    setGenderGirlBtn(res.id)
+                    setAllBoyBtn(res.id)
+                    setAllGirlBtn(res.id)
                 }
                 else if (res.error) {
                     $("#file_desc").text("本地图片上传失败，请重新选择")
@@ -172,8 +247,10 @@ $(document).ready(function () {
                     $("#status").text("图片已经上传，请选择您的服务")
                     $("#function_block").show()
                     setDetectBtn(res.id)
-                    setGenderBtn(res.id)
-                    setAllBtn(res.id)
+                    setGenderBoyBtn(res.id)
+                    setGenderGirlBtn(res.id)
+                    setAllBoyBtn(res.id)
+                    setAllGirlBtn(res.id)
                 }
                 else if (res.error) {
                     $("#web_desc").text("网络图片上传失败，请换一张")

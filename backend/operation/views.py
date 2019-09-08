@@ -97,8 +97,9 @@ def net(request, net_id):
         type_ = 'emotion'
     else:
         net_ = swapper
+        gender_model_name = request.POST.get('gender')
         try:
-            processed_path, crop_path = net_(operation.raw_image)
+            processed_path, crop_path = net_.swapgender(operation.raw_image, gender_model_name)
         except Exception:
             return JsonResponse({'error': 'fail to trans'})
         new_op = Operation.objects.create(

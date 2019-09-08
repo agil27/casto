@@ -19,6 +19,8 @@ import user.views
 import operation.views
 
 urlpatterns = [
+    path('/', user.views.index),
+    path('', user.views.index),
     path('index/', user.views.index),
     path('admin/', admin.site.urls),
     path('signup/', user.views.signup),
