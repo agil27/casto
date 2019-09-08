@@ -5,6 +5,10 @@ function GetQueryString(name) {
     return null;
 }
 
+function setProg(perc) {
+    $("#prog").attr("class", "progress-bar-striped bg-primary w-" + perc)
+}
+
 function setDetectBtn(op_id) {
     $("#detect_btn").click(function () {
         $("#status").text("正在进行图片转换，请稍候……")
@@ -13,6 +17,12 @@ function setDetectBtn(op_id) {
             type: "POST",
             url: "../operation/0/net/",
             data: {"id": op_id},
+            beforeSend: function(res) {
+                setProg(50)
+            },
+            complete: function(res) {
+                setProg(80)
+            },
             success: function (res) {
                 console.log("emotion", res.emotion)
                 console.log("cropped", res.cropped)
@@ -38,7 +48,12 @@ function setGenderBoyBtn(op_id) {
             type: "POST",
             url: "../operation/1/net/",
             data: {"id": op_id, "gender": "b2a"},
-
+            beforeSend: function(res) {
+                setProg(50)
+            },
+            complete: function(res) {
+                setProg(80)
+            },
             success: function (res) {
                 console.log(res.gender)
                 console.log(res.cropped)
@@ -64,7 +79,12 @@ function setGenderGirlBtn(op_id) {
             type: "POST",
             url: "../operation/1/net/",
             data: {"id": op_id, "gender": "a2b"},
-
+            beforeSend: function(res) {
+                setProg(50)
+            },
+            complete: function(res) {
+                setProg(80)
+            },
             success: function (res) {
                 console.log(res.gender)
                 console.log(res.cropped)
@@ -92,7 +112,14 @@ function setAllBoyBtn(op_id) {
             type: "POST",
             url: "../operation/0/net/",
             data: {"id": op_id},
+            beforeSend: function(res) {
+                setProg(50)
+            },
+            complete: function(res) {
+                setProg(80)
+            },
             success: function (res) {
+                setProg(100)
                 console.log(res)
                 console.log(res.emotion)
                 console.log(res.cropped)
@@ -116,6 +143,7 @@ function setAllBoyBtn(op_id) {
             url: "../operation/1/net/",
             data: {"id": op_id, "gender": "b2a"},
             success: function (res) {
+                setProg(100)
                 console.log(res.gender)
                 console.log(res.cropped)
                 if (res.error === undefined) {
@@ -147,6 +175,7 @@ function setAllGirlBtn(op_id) {
             url: "../operation/0/net/",
             data: {"id": op_id},
             success: function (res) {
+                setProg(100)
                 console.log(res)
                 console.log(res.emotion)
                 console.log(res.cropped)
@@ -170,6 +199,7 @@ function setAllGirlBtn(op_id) {
             url: "../operation/1/net/",
             data: {"id": op_id, "gender": "a2b"},
             success: function (res) {
+                setProg(100)
                 console.log(res.gender)
                 console.log(res.cropped)
                 if (res.error === undefined) {
