@@ -1,8 +1,8 @@
-function GetQueryString(name)
-{
-     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
-     var r = window.location.search.substr(1).match(reg);
-     if(r!=null)return  unescape(r[2]); return null;
+function GetQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]);
+    return null;
 }
 
 function onSignupClicked() {
@@ -19,15 +19,17 @@ function onSignupClicked() {
             password: pwd
         }
         console.log(data)
-        $.post("../signup/", data, function(res) {
+        $.post("../signup/", data, function (res) {
             if (res.status) {
                 window.location.replace("../login/");
+            } else {
+                alert(res.error)
             }
         })
     }
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
     let signup_btn = $("#btnSignup")
     signup_btn.click(onSignupClicked)
     $("#username").val(GetQueryString("name"))

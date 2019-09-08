@@ -25,9 +25,11 @@ def signup(request):
         password = request.POST.get('password', '').strip()
         print(username, password)
         if username == '' or password == '' or not valid_password(password):
-            return JsonResponse({'error': 'invalid parameter'})
+            return JsonResponse({'error': 'invalid username or password', 'status': False})
+        same_name = User.objects.filter(username=username)
+        if len(same_name) > 0:
+            return JsonResponse({'error': 'username has been used', 'status': False})
         user = User.objects.create_user(username=username, password=password)
-        # user = User.objects.create(username=username, password=make_password(password))
         user.save()
         return JsonResponse({'username': username, 'status': True})
     elif request.method == 'GET':
