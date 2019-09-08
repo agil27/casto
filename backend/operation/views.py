@@ -83,16 +83,27 @@ def net(request, net_id):
     if net_id == 0:
         net_ = detector
         processed_path, crop_path = net_(operation.raw_image)
-        operation.crop = crop_path
-        operation.emotion = processed_path
+        new_op = Operation.objects.create(
+            raw_image=operation.raw_image,
+            crop=crop_path,
+            emotion=processed_path,
+            type='0',
+            user_id=user_id
+        )
+        new_op.save()
         type_ = 'emotion'
     else:
         net_ = swapper
         processed_path, crop_path = net_(operation.raw_image)
-        operation.crop = crop_path
-        operation.gender = processed_path
+        new_op = Operation.objects.create(
+            raw_image=operation.raw_image,
+            crop=crop_path,
+            gender=processed_path,
+            type='1',
+            user_id=user_id
+        )
+        new_op.save()
         type_ = 'gender'
-    operation.save()
     shrink_processed_path = processed_path[10:]  # rid the first 'operation/
     shrink_crop_path = crop_path[10:]
     return JsonResponse({
@@ -114,27 +125,31 @@ def delete(request):
             return False
         else:
             raw = operation.raw_image
-            try:
-                os.remove(raw)
-            except FileNotFoundError:
-                pass
-            crop = operation.crop
-            try:
-                os.remove(crop)
-            except FileNotFoundError:
-                pass
-            emotion = operation.emotion
-            try:
-                os.remove(emotion)
-            except FileNotFoundError:
-                pass
-            gender = operation.gender
-            try:
-                os.remove(gender)
-            except FileNotFoundError:
-                pass
-            operation.delete()
-            return True
+            if len(Operation.objects.filter(raw_image=raw)) == 1:
+                try:
+                    os.remove(raw)
+                except FileNotFoundError:
+                    pass
+                crop = operation.crop
+                try:
+                    os.remove(crop)
+                except FileNotFoundError:
+                    pass
+                emotion = operation.emotion
+                try:
+                    os.remove(emotion)
+                except FileNotFoundError:
+                    pass
+                gender = operation.gender
+                try:
+                    os.remove(gender)
+                except FileNotFoundError:
+                    pass
+                operation.delete()
+                return True
+            else:
+                operation.delete()
+                return False
 
     ids = request.POST.getlist('ids[]', [])
     res = [{'id': id_, 'state': delete_operation(id_)} for id_ in ids]
@@ -144,7 +159,9 @@ def delete(request):
 @login_required
 def query(request):
     user_id = request.user.id
-    query_set = Operation.objects.filter(user_id=user_id)
+    query_set = Operation.objects\
+        .filter(user_id=user_id) \
+        .filter(type__in=['0', '1'])
     range_show = request.GET.get('range', 'no')
     rangequery = True if range_show == 'yes' else False
     page = request.GET.get('page', 0)
@@ -198,7 +215,9 @@ def query_admin(request):
     if not user.admin:
         return JsonResponse({'error': 'permission denied'})
     user_id = request.user.id
-    query_set = Operation.objects.filter(user_id=user_id)
+    query_set = Operation.objects\
+        .filter(user_id=user_id) \
+        .filter(type__in=['0', '1'])
     range_show = request.GET.get('range', 'no')
     rangequery = True if range_show == 'yes' else False
     page = request.GET.get('page', 0)
@@ -254,27 +273,31 @@ def delete_admin(request):
         except KeyError:
             return False
         raw = operation.raw_image
-        try:
-            os.remove(raw)
-        except FileNotFoundError:
-            pass
-        crop = operation.crop
-        try:
-            os.remove(crop)
-        except FileNotFoundError:
-            pass
-        emotion = operation.emotion
-        try:
-            os.remove(emotion)
-        except FileNotFoundError:
-            pass
-        gender = operation.gender
-        try:
-            os.remove(gender)
-        except FileNotFoundError:
-            pass
-        operation.delete()
-        return True
+        if len(Operation.objects.filter(raw_image=raw)) == 1:
+            try:
+                os.remove(raw)
+            except FileNotFoundError:
+                pass
+            crop = operation.crop
+            try:
+                os.remove(crop)
+            except FileNotFoundError:
+                pass
+            emotion = operation.emotion
+            try:
+                os.remove(emotion)
+            except FileNotFoundError:
+                pass
+            gender = operation.gender
+            try:
+                os.remove(gender)
+            except FileNotFoundError:
+                pass
+            operation.delete()
+            return True
+        else:
+            operation.delete()
+            return False
 
     ids = request.POST.getlist('ids[]', [])
     res = [{'id': id_, 'state': delete_operation(id_)} for id_ in ids]
@@ -302,15 +325,6 @@ def get_operation_info(operation):
         'gender': g,
         'type': type_
     }
-
-
-def read_image_from(path):
-    try:
-        with open(path, 'rb') as f:
-            data = f.read()
-    except IOError:
-        return None
-    return data
 
 
 def get_operation_info_admin(operation):
