@@ -22,7 +22,7 @@ def crop_image(image):
     pt1 = tuple(boxes[0][:2])
     pt2 = tuple(boxes[0][2:4])
     cropped = image.crop(pt1 + pt2)
-    #print('box', boxes, pt1 + pt2)
+    # print('box', boxes, pt1 + pt2)
     cropped_name = generate_name()
     cropped_path = os.path.join(OUTPUT_PATH, cropped_name)
     cropped.save(cropped_path)
