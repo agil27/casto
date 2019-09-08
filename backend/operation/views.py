@@ -24,9 +24,9 @@ BRIEF_PATH = 'operation/images'
 if not os.path.exists(UPLOAD_PATH):
     os.makedirs(UPLOAD_PATH)
 
-
 detector = Detector()
 swapper = Swapper()
+
 
 @login_required
 def upload(request):
@@ -106,7 +106,6 @@ def delete(request):
     user_id = request.user.id
 
     def delete_operation(operation_id):
-        print(operation_id)
         try:
             operation = Operation.objects.get(id=operation_id)
         except KeyError:
@@ -234,6 +233,16 @@ def query_admin(request):
 
 
 @login_required
+def get_admin(request):
+    operation_id = request.GET.get('id', -1)
+    try:
+        operation = Operation.objects.get(id=operation_id)
+    except KeyError:
+        return JsonResponse({'error': 'not exists'})
+    return JsonResponse(get_operation_info_admin(operation))
+
+
+@login_required
 def delete_admin(request):
     user = request.user
     if not user.admin:
@@ -275,8 +284,6 @@ def delete_admin(request):
 def get_operation_info(operation):
     e = operation.emotion
     g = operation.gender
-    print(e)
-    print(g)
     if e and g:
         type_ = '2'
     elif e:
