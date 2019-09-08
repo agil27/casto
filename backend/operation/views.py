@@ -220,7 +220,6 @@ def query_admin(request):
     user = request.user
     if not user.admin:
         return JsonResponse({'error': 'permission denied'})
-    user_id = request.user.id
     query_set = Operation.objects \
         .filter(type__in=['0', '1'])
     range_show = request.GET.get('range', 'no')
