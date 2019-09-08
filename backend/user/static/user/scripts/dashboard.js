@@ -7,6 +7,7 @@ function GetQueryString(name) {
 
 function setProg(perc) {
     $("#prog").attr("class", "progress-bar-striped bg-primary w-" + perc)
+    $("#progtext").text("当前进度：" + perc + "%")
 }
 
 function setDetectBtn(op_id) {
@@ -19,9 +20,6 @@ function setDetectBtn(op_id) {
             data: {"id": op_id},
             beforeSend: function(res) {
                 setProg(50)
-            },
-            complete: function(res) {
-                setProg(80)
             },
             success: function (res) {
                 console.log("emotion", res.emotion)
@@ -51,10 +49,8 @@ function setGenderBoyBtn(op_id) {
             beforeSend: function(res) {
                 setProg(50)
             },
-            complete: function(res) {
-                setProg(80)
-            },
             success: function (res) {
+                setProg(100)
                 console.log(res.gender)
                 console.log(res.cropped)
                 if (res.error === undefined) {
@@ -82,10 +78,8 @@ function setGenderGirlBtn(op_id) {
             beforeSend: function(res) {
                 setProg(50)
             },
-            complete: function(res) {
-                setProg(80)
-            },
             success: function (res) {
+                setProg(100)
                 console.log(res.gender)
                 console.log(res.cropped)
                 if (res.error === undefined) {
@@ -115,9 +109,6 @@ function setAllBoyBtn(op_id) {
             beforeSend: function(res) {
                 setProg(50)
             },
-            complete: function(res) {
-                setProg(80)
-            },
             success: function (res) {
                 setProg(100)
                 console.log(res)
@@ -142,6 +133,9 @@ function setAllBoyBtn(op_id) {
             type: "POST",
             url: "../operation/1/net/",
             data: {"id": op_id, "gender": "b2a"},
+            beforeSend: function(res) {
+                setProg(50)
+            },
             success: function (res) {
                 setProg(100)
                 console.log(res.gender)
@@ -174,6 +168,9 @@ function setAllGirlBtn(op_id) {
             type: "POST",
             url: "../operation/0/net/",
             data: {"id": op_id},
+            beforeSend: function(res) {
+                setProg(50)
+            },
             success: function (res) {
                 setProg(100)
                 console.log(res)
@@ -198,6 +195,9 @@ function setAllGirlBtn(op_id) {
             type: "POST",
             url: "../operation/1/net/",
             data: {"id": op_id, "gender": "a2b"},
+            beforeSend: function(res) {
+                setProg(50)
+            },
             success: function (res) {
                 setProg(100)
                 console.log(res.gender)
