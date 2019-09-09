@@ -20,7 +20,7 @@ function onSignupClicked() {
         }
         console.log(data)
         $.post("../signup/", data, function (res) {
-            if (res.status == 'True') {
+            if (res.status) {
                 window.location.replace("../login/");
             } else {
                 $("#authInfo").text(res.error)
