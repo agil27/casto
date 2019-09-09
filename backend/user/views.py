@@ -24,11 +24,13 @@ def signup(request):
         username = request.POST.get('username', '').strip()
         password = request.POST.get('password', '').strip()
         print(username, password)
-        if username == '' or password == '' or not valid_password(password):
-            return JsonResponse({'error': 'invalid username or password', 'status': False})
+        if username == '' or password == '':
+            return JsonResponse({'error': u'无效的用户名或密码', 'status': False})
+        if not valid_password(password):
+            return JsonResponse({'error': u'密码不合法，应包含字母和数字！', 'status': False})
         same_name = User.objects.filter(username=username)
         if len(same_name) > 0:
-            return JsonResponse({'error': 'username has been used', 'status': False})
+            return JsonResponse({'error': u'用户名已经被占用', 'status': False})
         user = User.objects.create_user(username=username, password=password)
         user.save()
         return JsonResponse({'username': username, 'status': True})
@@ -43,10 +45,10 @@ def login(request):
         username = request.POST.get('username', '').strip()
         password = request.POST.get('password', '').strip()
         if username == '' or password == '':
-            return JsonResponse({'error': 'invalid parameter'})
+            return JsonResponse({'error': u'用户名和密码不能为空'})
         user = authenticate(username=username, password=password)
         if user is None:
-            return JsonResponse({'error': 'fail to login'})
+            return JsonResponse({'error': u'未找到用户或密码错误'})
         django_login(request, user)
         return JsonResponse({'username': username, 'status': True})
     elif request.method == 'GET':

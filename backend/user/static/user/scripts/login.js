@@ -21,8 +21,10 @@ function onLoginBtnClicked() {
         console.log(data)
         $.post("../login/", data, function(res) {
             console.log(res)
-            if (res.status) {
+            if (res.status == "True") {
                 window.location.replace("../dashboard/")
+            } else {
+                $("#authInfo").text(res.error)
             }
         })
     }

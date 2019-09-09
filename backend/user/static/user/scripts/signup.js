@@ -20,10 +20,10 @@ function onSignupClicked() {
         }
         console.log(data)
         $.post("../signup/", data, function (res) {
-            if (res.status) {
+            if (res.status == 'True') {
                 window.location.replace("../login/");
             } else {
-                alert(res.error)
+                $("#authInfo").text(res.error)
             }
         })
     }
